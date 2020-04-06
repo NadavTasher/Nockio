@@ -1,0 +1,22 @@
+{
+  "name": "Dashboard",
+  "short_name": "Dashboard",
+  "description": "Manage deployments",
+  "start_url": "../index.html",
+  "background_color": "#fafaff",
+  "theme_color": "#fafaff",
+  "display": "standalone",
+  "orientation": "natural",
+  "icons": [
+    {
+      "src": "../images/icons/icon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "../images/icons/icon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

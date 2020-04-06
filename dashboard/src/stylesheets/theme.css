@@ -1,0 +1,110 @@
+/**
+ * Copyright (c) 2019 Nadav Tasher
+ * https://github.com/NadavTasher/BaseTemplate/
+ **/
+
+html {
+    /* Positioning */
+    position: fixed;
+    /* Sizing */
+    height: 100%;
+    width: 100%;
+    /* Alignment */
+    align-items: center !important;
+}
+
+body {
+    /* Overflow */
+    overflow-y: auto !important;
+    /* Alignment */
+    justify-content: start !important;
+    /* Sizing */
+    max-height: 100%;
+    /* Background */
+    background-color: var(--theme);
+}
+
+p, button, input, select, div, body, html {
+    /* Display */
+    display: flex;
+    flex-direction: column;
+    /* Text */
+    color: var(--text);
+    /* Size */
+    font-size: large;
+    font-family: Arial, ArialHebrew, sans-serif;
+    /* Text Alignment */
+    text-align: center;
+    text-align-last: center;
+    /* Minimal Sizing */
+    min-height: fit-content;
+    /* Outline */
+    outline: none;
+}
+
+
+p, button, input, select {
+    /* Positioning */
+    margin: 1vh;
+    padding: 1.5vh;
+    /* Alignment */
+    justify-content: center;
+    justify-items: center;
+    align-content: center;
+    align-items: stretch;
+    /* Shaping */
+    border-radius: 0.5vh;
+    border-color: transparent;
+    /* Width */
+    width: auto;
+}
+
+p {
+    flex-flow: wrap;
+    height: auto;
+}
+
+button, input, select {
+    transition-duration: 0.2s;
+    background-color: var(--bright);
+}
+
+button:hover, input:hover, select:hover, textarea:hover {
+    background-color: var(--dark);
+}
+
+[row = ""], [row = true], [column = ""], [column = true], div, body, html {
+    /* Alignment */
+    justify-content: center;
+    align-content: center;
+    /* Positioning */
+    margin: 0;
+    padding: 0;
+}
+
+[column = ""], [column = true] {
+    /* Flex */
+    flex-direction: column;
+    /* Alignment */
+    align-items: stretch;
+}
+
+[row = ""], [row = true] {
+    /* Flex */
+    flex-direction: row;
+    /* Alignment */
+    align-items: stretch;
+}
+
+[row = ""] > *, [row = true] > * {
+    /* Width */
+    width: 100%;
+}
+
+[hidden = ""], [hidden = true] {
+    display: none !important;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+}
