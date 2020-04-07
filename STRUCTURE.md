@@ -2,11 +2,16 @@
 ```
 LTS-ROOT/
     configuration/
-        nockio/
-        
+        MyApp1/
+            .nockio - Application properties
+            MySQLAppDB.nockio - Deployment configuration
+            GUI.nockio - Deployment configuration
+    storage/
+        infrastructure/
+            git/
+                
         applications/
             MyApp1/
-                .nockio - Application properties
-                MySQLAppDB.nockio - Deployment configuration
-                GUI.nockio - Deployment configuration
+                GUI/
+                    // LTS per app
 ```

@@ -18,20 +18,8 @@ public abstract class Storage {
     private static final File APPLICATION_STORAGE = new File(ROOT_DATA, Constants.DIRECTORY_APPLICATIONS);
     private static final File APPLICATION_CONFIGURATION = new File(ROOT_CONFIGURATION, Constants.DIRECTORY_APPLICATIONS);
 
-    /**
-     * Finds the configuration file of a given deployment.
-     * @param application Application name
-     * @param deployment Deployment name
-     * @return Configuration file
-     */
-    public static File getConfigurationFile(String application, String deployment) {
-        // Find the directory
-        File applicationDirectory = new File(APPLICATION_CONFIGURATION, application);
-        // Make sure the applicationData directory exists
-        if (!applicationDirectory.exists())
-            applicationDirectory.mkdirs();
-        // Find the deployment file
-        return new File(applicationDirectory, deployment + Constants.FILE_EXTENSION);
+    public static File getSourcesDirectory(){
+
     }
 
 }
