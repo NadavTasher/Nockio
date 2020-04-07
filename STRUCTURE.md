@@ -9,6 +9,12 @@ LTS-ROOT/
     storage/
         infrastructure/
             git/
+                sources/
+                    // Sources per app
+                ssh/
+                    // SSH pub-keys
+            proxy/
+                configurations/
                 
         applications/
             MyApp1/

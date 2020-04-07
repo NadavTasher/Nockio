@@ -38,4 +38,9 @@ public class Application {
         // Create the network
         client.createNetworkCmd().withName("application-" + name.toLowerCase()).withDriver("bridge").exec();
     }
+
+    private void createContainer(DockerClient client){
+        // TODO: Create a new container with the configuration
+        // TODO: Add application network, proxy network
+    }
 }
