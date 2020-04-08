@@ -34,45 +34,49 @@ class Base
     public static function handle($API, $callback, $filter = true)
     {
         // Initialize the request
-        $request = null;
+        $requestString = null;
         // Load the request from POST or GET
-        if (isset($_POST["api"])) {
-            $request = $_POST["api"];
-        } else if (isset($_GET["api"])) {
-            $request = $_GET["api"];
+        if (isset($_POST[$API])) {
+            if (is_string($_POST[$API])) {
+                $requestString = $_POST[$API];
+            }
+        } else if (isset($_GET[$API])) {
+            if (is_string($_GET[$API])) {
+                $requestString = $_GET[$API];
+            }
         }
         // Make sure the request is initialized
-        if ($request !== null) {
+        if ($requestString !== null) {
             // Filter the request
             if ($filter) {
-                $request = str_replace("<", "", $request);
-                $request = str_replace(">", "", $request);
+                $requestString = str_replace("<", "", $requestString);
+                $requestString = str_replace(">", "", $requestString);
             }
             // Decode the request
-            $APIs = json_decode($request);
-            // Parse the APIs
-            if (isset($APIs->$API)) {
+            $requestObject = json_decode($requestString);
+            // Make sure the object is not null
+            if ($requestObject !== null) {
                 // Default action & parameters
-                $request_action = null;
-                $request_parameters = null;
+                $requestAction = null;
+                $requestParameters = null;
                 // Check for overriding inputs
-                if (isset($APIs->$API->action) && is_string($APIs->$API->action)) {
-                    $request_action = $APIs->$API->action;
+                if (isset($requestObject->action) && is_string($requestObject->action)) {
+                    $requestAction = $requestObject->action;
                 }
-                if (isset($APIs->$API->parameters) && is_object($APIs->$API->parameters)) {
-                    $request_parameters = $APIs->$API->parameters;
+                if (isset($requestObject->parameters) && is_object($requestObject->parameters)) {
+                    $requestParameters = $requestObject->parameters;
                 }
                 // Execute the call
-                $request_result = $callback($request_action, $request_parameters);
+                $requestResult = $callback($requestAction, $requestParameters);
                 // Parse the results
-                if (is_array($request_result)) {
-                    if (count($request_result) >= 2) {
-                        if (is_bool($request_result[0])) {
+                if (is_array($requestResult)) {
+                    if (count($requestResult) >= 2) {
+                        if (is_bool($requestResult[0])) {
                             self::$result->$API = new stdClass();
-                            self::$result->$API->success = $request_result[0];
-                            self::$result->$API->result = $request_result[1];
-                            if (count($request_result) >= 3) {
-                                return $request_result[2];
+                            self::$result->$API->success = $requestResult[0];
+                            self::$result->$API->result = $requestResult[1];
+                            if (count($requestResult) >= 3) {
+                                return $requestResult[2];
                             } else {
                                 return null;
                             }

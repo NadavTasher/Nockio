@@ -6,7 +6,7 @@
 :root {
     --bright: #DDDDEE;
     --dark: #9999AA;
-    --theme: #fafaff;
+    --theme: var(--bright);
     --text: black;
 }
 
@@ -14,3 +14,24 @@ body {
     max-width: 460px;
 }
 
+/* ID based styles */
+
+/* Heights */
+
+#top-pane {
+    height: 8vh;
+}
+
+#content-pane {
+    height: 84vh;
+}
+
+#bottom-pane {
+    height: 8vh;
+}
+
+/* Icon */
+#top-pane-icon {
+    width: auto;
+    height: inherit;
+}

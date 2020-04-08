@@ -1,10 +1,10 @@
 {
   "name": "Dashboard",
   "short_name": "Dashboard",
-  "description": "Manage deployments",
+  "description": "Manage your Nockio applications.",
   "start_url": "../index.html",
-  "background_color": "#fafaff",
-  "theme_color": "#fafaff",
+  "background_color": "#DDDDEE",
+  "theme_color": "#DDDDEE",
   "display": "standalone",
   "orientation": "natural",
   "icons": [

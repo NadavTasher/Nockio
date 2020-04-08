@@ -46,13 +46,10 @@ class API {
     static call(endpoint, APIs = []) {
         // Create a form
         let form = new FormData();
-        // Compile to hook
-        let hook = {};
+        // Add APIs to form
         for (let API of APIs) {
-            hook[API.API] = API.request;
+            form.append(API.API, JSON.stringify(API.request));
         }
-        // Append the compiled hook as "api"
-        form.append("api", JSON.stringify(hook));
         // Perform the request
         fetch("apis/" + endpoint + "/", {
             method: "post",

@@ -8,12 +8,12 @@
     <!-- Charset -->
     <meta charset="UTF-8"/>
     <!-- App Description -->
-    <meta name="description" content="Manage deployments">
+    <meta name="description" content="Manage your Nockio applications.">
     <!-- Viewport -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes, minimal-ui"/>
     <!-- Mobile -->
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#fafaff"/>
+    <meta name="theme-color" content="#DDDDEE"/>
     <!-- Mobile Safari -->
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-title" content="Dashboard"/>
@@ -35,8 +35,24 @@
     <noscript></noscript>
 </head>
 <body onload="window.prepare(load)" column>
-<div id="deployments" column>
+<div id="top-pane" row>
+    <img id="top-pane-icon" src="images/icons/icon.png" alt="Nockio Icon"/>
+</div>
+<div id="content-pane" column>
+    <div id="applications-pane" column>
 
+    </div>
+    <div id="deployments-pane" column>
+
+    </div>
+    <div id="creation-pane" column>
+
+    </div>
+</div>
+<div id="bottom-pane" row>
+    <button>Applications</button>
+    <button>Deployments</button>
+    <button>Settings</button>
 </div>
 </body>
 </html>
