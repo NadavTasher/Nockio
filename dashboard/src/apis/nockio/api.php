@@ -9,7 +9,10 @@ class Nockio
     // Constants
     public const API = "nockio";
 
-    private const USER = "Administrator";
+    private const DEFAULT_USER = "Administrator";
+
+    private const GIT_DIRECTORY = DIRECTORY_SEPARATOR . "nockio" . DIRECTORY_SEPARATOR . "infrastructure" . DIRECTORY_SEPARATOR . "git";
+    private const PROXY_DIRECTORY = DIRECTORY_SEPARATOR . "nockio" . DIRECTORY_SEPARATOR . "infrastructure" . DIRECTORY_SEPARATOR . "git";
 
     public static function initialize()
     {
@@ -21,7 +24,7 @@ class Nockio
             // Requires authentication
             Authenticate::initialize();
             if ($action === "setUp") {
-                if (Authenticate::signUp(self::USER, null)[1] !== "User already exists") {
+                if (Authenticate::signUp(self::DEFAULT_USER, null)[1] !== "User already exists") {
                     if (isset($parameters->password)) {
                         if (is_string($parameters->password)) {
                             Authenticate::signUp("Administrator", $parameters->password);
@@ -80,6 +83,33 @@ class Nockio
                                 return [false, "Invalid parameters"];
                             }
                             return [false, "Missing parameters"];
+                        } else if ($action === "createDeployment") {
+                            if (isset($parameters->application) && isset($parameters->deployment)) {
+                                if (is_string($parameters->application) && is_string($parameters->deployment)) {
+                                    $applicationName = basename($parameters->application);
+                                    $deploymentName = basename($parameters->deployment);
+                                    // Find the file
+                                    $deploymentFile = Utility::evaluateFile("applications:$applicationName:$deploymentName", self::API);
+                                    // Make sure the file exists
+                                    if (!file_exists($deploymentFile)) {
+                                        // Create a deployment file
+                                        file_put_contents($deploymentFile, json_encode(new stdClass()));
+                                        // Create a new Git repository
+                                        $targetGitDirectory = self::GIT_DIRECTORY . DIRECTORY_SEPARATOR . "sources" . DIRECTORY_SEPARATOR . $applicationName . DIRECTORY_SEPARATOR . $deploymentName;
+                                        // Create the target directory
+                                        mkdir($targetGitDirectory, 0777, true);
+                                        // Create the repository
+                                        shell_exec("git init --bare $targetGitDirectory");
+                                        // Return the contents
+                                        return [true, null];
+                                    }
+                                    return [false, "Deployment already exists"];
+                                }
+                                return [false, "Invalid parameters"];
+                            }
+                            return [false, "Missing parameters"];
+                        } else if ($action === "modifyDeployment") {
+
                         }
                         return [false, "Unknown hook"];
                     }
