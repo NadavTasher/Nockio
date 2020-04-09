@@ -1,0 +1,32 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Build and Run - Dashboard" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
+    <deployment type="dockerfile">
+      <settings>
+        <option name="buildCliOptions" value="" />
+        <option name="command" value="" />
+        <option name="containerName" value="nockio-dashboard-test" />
+        <option name="entrypoint" value="" />
+        <option name="imageTag" value="nockio-dashboard-test" />
+        <option name="portBindings">
+          <list>
+            <DockerPortBindingImpl>
+              <option name="containerPort" value="80" />
+              <option name="hostPort" value="8080" />
+            </DockerPortBindingImpl>
+          </list>
+        </option>
+        <option name="commandLineOptions" value="-d" />
+        <option name="sourceFilePath" value="dashboard/Dockerfile" />
+        <option name="volumeBindings">
+          <list>
+            <DockerVolumeBindingImpl>
+              <option name="containerPath" value="/nockio" />
+              <option name="hostPath" value="$USER_HOME$/Documents/Nockio" />
+            </DockerVolumeBindingImpl>
+          </list>
+        </option>
+      </settings>
+    </deployment>
+    <method v="2" />
+  </configuration>
+</component>
