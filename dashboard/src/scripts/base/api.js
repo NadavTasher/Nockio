@@ -32,89 +32,34 @@ class API {
      * @param action Action
      * @param parameters Parameters
      * @param callback Callback
-     * @param APIs API list
      */
-    static send(endpoint = null, action = null, parameters = null, callback = null, APIs = []) {
-        this.call(endpoint, this.hook(endpoint, action, parameters, callback, APIs));
-    }
-
-    /**
-     * Makes an API call.
-     * @param endpoint Endpoint API
-     * @param APIs API list
-     */
-    static call(endpoint, APIs = []) {
+    static call(endpoint = null, action = null, parameters = null, callback = null) {
         // Create a form
         let form = new FormData();
-        // Add APIs to form
-        for (let API of APIs) {
-            form.append(API.API, JSON.stringify(API.request));
+        // Append parameters to form
+        for (let key in parameters) {
+            if (parameters.hasOwnProperty(key))
+                form.append(key, parameters[key]);
         }
         // Perform the request
-        fetch("apis/" + endpoint + "/", {
+        fetch("apis/" + endpoint + "/" + "?" + action, {
             method: "post",
             body: form
-        }).then(response => {
-            response.text().then((result) => {
-                // Try to parse the result as JSON
-                try {
-                    let stack = JSON.parse(result);
-                    // Loop through APIs
-                    for (let API of APIs) {
-                        // Check if the callback really exists
-                        if (API.callback !== null) {
-                            // Try parsing and calling
-                            try {
-                                // Make sure the requested API exists in the result
-                                if (stack.hasOwnProperty(API.API)) {
-                                    // Store the result
-                                    let layer = stack[API.API];
-                                    // Check the result's integrity
-                                    if (layer.hasOwnProperty("success") && layer.hasOwnProperty("result")) {
-                                        // Call the callback with the result
-                                        API.callback(layer["success"] === true, layer["result"]);
-                                    } else {
-                                        // Call the callback with an error
-                                        API.callback(false, "API parameters not found");
-                                    }
-                                } else {
-                                    // Call the callback with an error
-                                    API.callback(false, "API not found");
-                                }
-                            } catch (ignored) {
-                            }
-                        }
-                    }
-                } catch (ignored) {
+        }).then(response => response.text().then((result) => {
+            // Try to parse the result as JSON
+            try {
+                let API = JSON.parse(result);
+                // Check the result's integrity
+                if (API.hasOwnProperty("status") && API.hasOwnProperty("result")) {
+                    // Call the callback with the result
+                    callback(API["status"] === true, API["result"]);
+                } else {
+                    // Call the callback with an error
+                    callback(false, "API response malformed");
                 }
-            });
-        });
-    }
-
-    /**
-     * Compiles an API call hook.
-     * @param API API name
-     * @param action Action
-     * @param parameters Parameters
-     * @param callback Callback
-     * @param APIs API list
-     * @return *[] API list
-     */
-    static hook(API = null, action = null, parameters = null, callback = null, APIs = []) {
-        // Make sure none are null
-        if (API !== null) {
-            // Compile API
-            APIs.push({
-                API: API,
-                request: {
-                    action: action || null,
-                    parameters: parameters || null
-                },
-                callback: callback || null
-            });
-        }
-        // Return updated API list
-        return APIs;
+            } catch (ignored) {
+            }
+        }));
     }
 
 }

@@ -13,88 +13,50 @@ class Base
     // Constants
     public const API = "base";
 
-    // API results
-    private static stdClass $result;
-
-    /**
-     * Creates the result object.
-     */
-    public static function init()
-    {
-        self::$result = new stdClass();
-    }
-
     /**
      * Handles API calls by handing them over to the callback.
-     * @param string $API The API to listen to
-     * @param callable $callback The callback to be called with action and parameters
-     * @param bool $filter Whether to filter XSS characters
-     * @return mixed|null A result array with [success, result|error]
+     * @param callable $callback Callback to handle the request
      */
-    public static function handle($API, $callback, $filter = true)
+    public static function handle($callback)
     {
-        // Initialize the request
-        $requestString = null;
-        // Load the request from POST or GET
-        if (isset($_POST[$API])) {
-            if (is_string($_POST[$API])) {
-                $requestString = $_POST[$API];
+        // Initialize the response
+        $result = new stdClass();
+        // Initialize the action
+        if (count($_GET) > 0) {
+            // Get the action
+            $requestAction = array_key_first($_GET);
+            // Parse the parameters
+            $requestParameters = new stdClass();
+            // Loop over GET parameters
+            foreach ($_GET as $name => $value) {
+                if (is_string($value))
+                    $requestParameters->$name = $value;
             }
-        } else if (isset($_GET[$API])) {
-            if (is_string($_GET[$API])) {
-                $requestString = $_GET[$API];
+            // Loop over POST parameters
+            foreach ($_POST as $name => $value) {
+                if (is_string($value))
+                    $requestParameters->$name = $value;
             }
-        }
-        // Make sure the request is initialized
-        if ($requestString !== null) {
-            // Filter the request
-            if ($filter) {
-                $requestString = str_replace("<", "", $requestString);
-                $requestString = str_replace(">", "", $requestString);
-            }
-            // Decode the request
-            $requestObject = json_decode($requestString);
-            // Make sure the object is not null
-            if ($requestObject !== null) {
-                // Default action & parameters
-                $requestAction = null;
-                $requestParameters = null;
-                // Check for overriding inputs
-                if (isset($requestObject->action) && is_string($requestObject->action)) {
-                    $requestAction = $requestObject->action;
-                }
-                if (isset($requestObject->parameters) && is_object($requestObject->parameters)) {
-                    $requestParameters = $requestObject->parameters;
-                }
-                // Execute the call
-                $requestResult = $callback($requestAction, $requestParameters);
-                // Parse the results
-                if (is_array($requestResult)) {
-                    if (count($requestResult) >= 2) {
-                        if (is_bool($requestResult[0])) {
-                            self::$result->$API = new stdClass();
-                            self::$result->$API->success = $requestResult[0];
-                            self::$result->$API->result = $requestResult[1];
-                            if (count($requestResult) >= 3) {
-                                return $requestResult[2];
-                            } else {
-                                return null;
-                            }
-                        }
+            // Unset the action
+            unset($requestParameters->$requestAction);
+            // Execute the call
+            $requestResult = $callback($requestAction, $requestParameters);
+            // Parse the results
+            if (is_array($requestResult)) {
+                if (count($requestResult) === 2) {
+                    if (is_bool($requestResult[0])) {
+                        // Set status
+                        $result->status = $requestResult[0];
+                        // Set result
+                        $result->result = $requestResult[1];
                     }
                 }
             }
         }
-        // Fallback result
-        return null;
-    }
-
-    /**
-     * Echos the result object as JSON.
-     */
-    public static function echo()
-    {
-        echo json_encode(self::$result);
+        // Change the response type
+        header("Content-Type: application/json");
+        // Echo response
+        echo json_encode($result);
     }
 }
 
