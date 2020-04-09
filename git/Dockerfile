@@ -2,12 +2,15 @@
 FROM debian:buster
 # Install additional software
 RUN apt-get -y update
-RUN apt-get -y install openssh-server
+RUN apt-get -y install openssh-server --no-install-recommends --no-install-suggests
+RUN apt-get -y install git
 # Set up SSH
 EXPOSE 22
 RUN mkdir /var/run/sshd
-RUN echo "AuthorizedKeysFile /nockio/infrastructure/git/ssh" >> /etc/ssh/sshd_config
+RUN echo "StrictModes no" >> /etc/ssh/sshd_config
+RUN echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+RUN echo "AuthorizedKeysFile /nockio/infrastructure/git/ssh/authorized_keys" >> /etc/ssh/sshd_config
 # Create the user
-RUN useradd -m -d /nockio/infrastructure/git/sources -s /bin/bash nockio
+RUN useradd -M -d /nockio/infrastructure/git/ -s /bin/bash nockio
 # Entrypoint command
-CMD ["/usr/sbin/sshd -D"]
+CMD ["/usr/sbin/sshd", "-D"]

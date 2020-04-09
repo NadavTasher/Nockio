@@ -15,7 +15,7 @@
             </DockerPortBindingImpl>
           </list>
         </option>
-        <option name="commandLineOptions" value="-d" />
+        <option name="commandLineOptions" value="" />
         <option name="sourceFilePath" value="git/Dockerfile" />
         <option name="volumeBindings">
           <list>

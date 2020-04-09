@@ -110,6 +110,23 @@ class Nockio
                             return [false, "Missing parameters"];
                         } else if ($action === "modifyDeployment") {
 
+                        } else if ($action === "addPublicKey") {
+                            if (isset($parameters->key) && is_string($parameters->key)) {
+                                // Find authorized_keys path
+                                $targetFilePath = self::GIT_DIRECTORY . DIRECTORY_SEPARATOR . "ssh" . DIRECTORY_SEPARATOR . "authorized_keys";
+                                // Read contents
+                                $contents = "";
+                                if (file_exists($targetFilePath)) {
+                                    $contents = file_get_contents($targetFilePath);
+                                }
+                                // Append key
+                                $contents .= $parameters->key;
+                                $contents .= "\n";
+                                // Write file
+                                file_put_contents($targetFilePath, $contents);
+                                return [true, null];
+                            }
+                            return [false, "Missing parameters"];
                         }
                         return [false, "Unknown hook"];
                     }
