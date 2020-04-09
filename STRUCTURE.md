@@ -1,14 +1,16 @@
 # Directory structure of LTS
 ```
-/nockio/
-    infrastructure/
-        git/
-            sources/
-                // Sources per app
-            ssh/
-                // SSH pub-keys
-        proxy/
-            configurations/
+/var/lib/nockio/
+    git/
+        sources/
+            MyApp1/
+                MyDB/
+                    .git/
+                    // Git repos
+        ssh/
+            authorized_keys
+    proxy/
+        configurations/
             
     applications/
         MyApp1/

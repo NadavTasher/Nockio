@@ -20,7 +20,7 @@
         <option name="volumeBindings">
           <list>
             <DockerVolumeBindingImpl>
-              <option name="containerPath" value="/nockio" />
+              <option name="containerPath" value="/var/lib/nockio" />
               <option name="hostPath" value="$USER_HOME$/Documents/Nockio" />
             </DockerVolumeBindingImpl>
           </list>

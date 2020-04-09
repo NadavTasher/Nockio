@@ -9,10 +9,14 @@ class Nockio
     // Constants
     public const API = "nockio";
 
+    // Defaults
     private const DEFAULT_USER = "Administrator";
 
-    private const GIT_DIRECTORY = DIRECTORY_SEPARATOR . "nockio" . DIRECTORY_SEPARATOR . "infrastructure" . DIRECTORY_SEPARATOR . "git";
-    private const PROXY_DIRECTORY = DIRECTORY_SEPARATOR . "nockio" . DIRECTORY_SEPARATOR . "infrastructure" . DIRECTORY_SEPARATOR . "git";
+    // Directory roots
+    private const DIRECTORY_ROOT = DIRECTORY_SEPARATOR . "var" . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "nockio";
+
+    // Subdirectory roots
+    private const DIRECTORY_GIT = self::DIRECTORY_ROOT . DIRECTORY_SEPARATOR . "git";
 
     public static function initialize()
     {
@@ -95,11 +99,13 @@ class Nockio
                                         // Create a deployment file
                                         file_put_contents($deploymentFile, json_encode(new stdClass()));
                                         // Create a new Git repository
-                                        $targetGitDirectory = self::GIT_DIRECTORY . DIRECTORY_SEPARATOR . "sources" . DIRECTORY_SEPARATOR . $applicationName . DIRECTORY_SEPARATOR . $deploymentName;
+                                        $targetGitDirectory = self::DIRECTORY_GIT . DIRECTORY_SEPARATOR . "sources" . DIRECTORY_SEPARATOR . $applicationName . DIRECTORY_SEPARATOR . $deploymentName;
                                         // Create the target directory
                                         mkdir($targetGitDirectory, 0777, true);
                                         // Create the repository
                                         shell_exec("git init --bare $targetGitDirectory");
+                                        // Change the permissions
+                                        shell_exec("chmod 777 -R $targetGitDirectory");
                                         // Return the contents
                                         return [true, null];
                                     }
@@ -113,7 +119,7 @@ class Nockio
                         } else if ($action === "addPublicKey") {
                             if (isset($parameters->key) && is_string($parameters->key)) {
                                 // Find authorized_keys path
-                                $targetFilePath = self::GIT_DIRECTORY . DIRECTORY_SEPARATOR . "ssh" . DIRECTORY_SEPARATOR . "authorized_keys";
+                                $targetFilePath = self::DIRECTORY_GIT . DIRECTORY_SEPARATOR . "ssh" . DIRECTORY_SEPARATOR . "authorized_keys";
                                 // Read contents
                                 $contents = "";
                                 if (file_exists($targetFilePath)) {

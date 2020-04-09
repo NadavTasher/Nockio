@@ -11,7 +11,7 @@
           <list>
             <DockerPortBindingImpl>
               <option name="containerPort" value="22" />
-              <option name="hostPort" value="1000" />
+              <option name="hostPort" value="22" />
             </DockerPortBindingImpl>
           </list>
         </option>
@@ -20,7 +20,7 @@
         <option name="volumeBindings">
           <list>
             <DockerVolumeBindingImpl>
-              <option name="containerPath" value="/nockio" />
+              <option name="containerPath" value="/var/lib/nockio" />
               <option name="hostPath" value="$USER_HOME$/Documents/Nockio" />
             </DockerVolumeBindingImpl>
           </list>
