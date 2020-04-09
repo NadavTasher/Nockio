@@ -11,6 +11,12 @@
             authorized_keys
     proxy/
         configurations/
+            MyApp1.conf
+        certificates/
+            MyApp1/
+                certificate.pem
+                private.pem
+                chain.pem
             
     applications/
         MyApp1/
