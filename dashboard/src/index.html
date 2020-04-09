@@ -38,14 +38,14 @@
 </head>
 <body onload="window.prepare(()=>Authenticate.initialize(load))" column>
 <div id="authenticate" column>
-    <p style="font-size: 5vh;">Welcome to AppName</p>
+    <p style="font-size: 5vh;">Welcome to Nockio</p>
     <p style="font-size: 3vh;" id="authenticate-output">Please authenticate to continue.</p>
     <div id="authenticate-inputs" column>
-        <input id="authenticate-name" type="text" placeholder="Name"/>
+        <input id="authenticate-name" type="text" placeholder="Name" value="Administrator" readonly/>
         <input id="authenticate-password" type="password" placeholder="Password"/>
-        <div id="authenticate-buttons" column>
-            <button onclick="Authenticate.signIn(load)">Sign In</button>
+        <div id="authenticate-buttons" row>
             <button onclick="Nockio.setUp(load)">Set Up</button>
+            <button onclick="Authenticate.signIn(load)">Sign In</button>
         </div>
     </div>
 </div>

@@ -82,7 +82,7 @@ class Utility
      * @param string $guestAPI Guest API
      * @return string File path
      */
-    public static function evaluateFile($name, $hostAPI = Base::API, $guestAPI = null)
+    public static function evaluateFile($name = "", $hostAPI = Base::API, $guestAPI = null)
     {
         // Find host directory
         $directory = self::DIRECTORY_ROOT . DIRECTORY_SEPARATOR . $hostAPI;
@@ -115,10 +115,10 @@ class Utility
      * @param string $guestAPI Guest API
      * @return string Directory path
      */
-    public static function evaluateDirectory($name, $hostAPI = Base::API, $guestAPI = null)
+    public static function evaluateDirectory($name = "", $hostAPI = Base::API, $guestAPI = null)
     {
         // Find parent directory
-        $directory = self::evaluateFile($name, $hostAPI, $guestAPI) . DIRECTORY_SEPARATOR . end(explode(self::DIRECTORY_DELIMITER, $name));
+        $directory = self::evaluateFile($name, $hostAPI, $guestAPI);
         // Make sure the subdirectory exists
         if (!file_exists($directory)) mkdir($directory);
         // Return the directory path
