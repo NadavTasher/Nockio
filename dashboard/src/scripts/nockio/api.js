@@ -1,0 +1,8 @@
+
+class Nockio {
+
+    static setUp(){
+
+    }
+
+}

@@ -29,30 +29,46 @@
     <!-- Scripts -->
     <script type="text/javascript" src="scripts/app.js"></script>
     <script type="text/javascript" src="scripts/base/api.js"></script>
+    <script type="text/javascript" src="scripts/nockio/api.js"></script>
+    <script type="text/javascript" src="scripts/authenticate/api.js"></script>
     <!-- App Title -->
     <title>Dashboard</title>
     <!-- No Script -->
     <noscript></noscript>
 </head>
-<body onload="window.prepare(load)" column>
-<div id="top-pane" row>
-    <img id="top-pane-icon" src="images/icons/icon.png" alt="Nockio Icon"/>
-</div>
-<div id="content-pane" column>
-    <div id="applications-pane" column>
-
-    </div>
-    <div id="deployments-pane" column>
-
-    </div>
-    <div id="creation-pane" column>
-
+<body onload="window.prepare(()=>Authenticate.initialize(load))" column>
+<div id="authenticate" column>
+    <p style="font-size: 5vh;">Welcome to AppName</p>
+    <p style="font-size: 3vh;" id="authenticate-output">Please authenticate to continue.</p>
+    <div id="authenticate-inputs" column>
+        <input id="authenticate-name" type="text" placeholder="Name"/>
+        <input id="authenticate-password" type="password" placeholder="Password"/>
+        <div id="authenticate-buttons" column>
+            <button onclick="Authenticate.signIn(load)">Sign In</button>
+            <button onclick="Nockio.setUp(load)">Set Up</button>
+        </div>
     </div>
 </div>
-<div id="bottom-pane" row>
-    <button>Applications</button>
-    <button>Deployments</button>
-    <button>Settings</button>
+<div id="authenticated" column>
+    <div id="top-pane" row>
+        <img id="top-pane-icon" src="images/icons/icon.png" alt="Nockio Icon"/>
+    </div>
+    <div id="content-pane" column>
+        <div id="applications-pane" column>
+
+        </div>
+        <div id="deployments-pane" column>
+
+        </div>
+        <div id="creation-pane" column>
+
+        </div>
+    </div>
+    <div id="bottom-pane" row>
+        <button>Applications</button>
+        <button>Deployments</button>
+        <button>Settings</button>
+    </div>
 </div>
 </body>
 </html>
