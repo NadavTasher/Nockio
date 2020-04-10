@@ -159,7 +159,8 @@ class Nockio
                 // Create the target directory
                 mkdir($repositoryDirectory, 0777, true);
                 // Create the repository
-                shell_exec("git init --bare $repositoryDirectory");
+                shell_exec("cd $repositoryDirectory && git init");
+                shell_exec("cd $repositoryDirectory && git config --local receive.denyCurrentBranch updateInstead");
                 // Change the permissions
                 shell_exec("chmod 777 -R $repositoryDirectory");
                 // Return the contents
