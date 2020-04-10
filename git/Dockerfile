@@ -6,10 +6,8 @@ RUN apt-get -y install openssh-server git --no-install-recommends --no-install-s
 # Set up SSH
 EXPOSE 22
 RUN mkdir /var/run/sshd
-# Modify configuration
-RUN echo "StrictModes no" >> /etc/ssh/sshd_config
-RUN echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
-RUN echo "AuthorizedKeysFile /var/lib/nockio/git/ssh/authorized_keys" >> /etc/ssh/sshd_config
+# Copy configuration
+COPY configurations/sshd_config /etc/ssh/sshd_config
 # Create the user
 RUN useradd -M -d /var/lib/nockio/git/sources/ -s /bin/bash nockio
 # Entrypoint command

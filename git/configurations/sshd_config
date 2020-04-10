@@ -1,0 +1,14 @@
+StrictModes no
+
+# Authentication settings
+UsePAM yes
+PermitRootLogin no
+PubkeyAuthentication yes
+PasswordAuthentication no
+ChallengeResponseAuthentication no
+
+# SFTP settings
+Subsystem sftp internal-sftp
+
+# Directory based settings
+AuthorizedKeysFile /var/lib/nockio/git/ssh/authorized_keys
