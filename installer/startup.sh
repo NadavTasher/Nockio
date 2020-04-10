@@ -14,6 +14,7 @@ docker run \
   --name nockio-dashboard \
   --volume $NOCKIO_DIRECTORY/git:/var/lib/nockio/git \
   --volume $NOCKIO_DIRECTORY/proxy:/var/lib/nockio/proxy \
+  --volume /var/run/docker.sock:/var/run/docker.sock \
   --hostname nockio-dashboard \
   --network nockio-infrastructure \
   --detach nockio-dashboard-test
