@@ -23,6 +23,10 @@
               <option name="containerPath" value="/var/lib/nockio" />
               <option name="hostPath" value="$USER_HOME$/Documents/Nockio" />
             </DockerVolumeBindingImpl>
+            <DockerVolumeBindingImpl>
+              <option name="containerPath" value="/var/run/docker.sock" />
+              <option name="hostPath" value="/var/run/docker.sock" />
+            </DockerVolumeBindingImpl>
           </list>
         </option>
       </settings>

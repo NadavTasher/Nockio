@@ -192,7 +192,23 @@ class Nockio
             if (($deploymentPrint = self::deploymentPrint($applicationName, $deploymentName))[0]) {
                 if ($deploymentPrint[1]) {
                     $configuration = $deploymentPrint[1];
-                    // Initialize flags
+                    // Connect to docker socket
+                    $socket = curl_init();
+                    curl_setopt($socket, CURLOPT_UNIX_SOCKET_PATH, self::DOCKER_SOCKET);
+                    curl_setopt($socket, CURLOPT_BUFFERSIZE, 256);
+                    curl_setopt($socket, CURLOPT_TIMEOUT, 60 * 1000);
+                    curl_setopt($socket, CURLOPT_WRITEFUNCTION, function ($socket, $string) {
+                        echo $string;
+                    });
+                    curl_setopt($socket, CURLOPT_URL, "http://localhost/version");
+                    curl_exec($socket);
+                    // Build new image
+
+                    // Shut-down running container
+
+                    // Create networks
+
+                    // Start-up new container
 
                 }
             }
