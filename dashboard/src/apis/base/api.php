@@ -76,7 +76,32 @@ class Utility
     private const HASHING_ALGORITHM = "sha256";
 
     /**
-     * Returns a file path for a file name.
+     * Returns a writable path for a name.
+     * @param string $name Path name
+     * @param string $base Base directory
+     * @return string Path
+     */
+    public static function evaluatePath($name, $base = self::DIRECTORY_ROOT)
+    {
+        // Split name
+        $split = explode(self::DIRECTORY_DELIMITER, $name, 2);
+        // Check if we have to create a sub-path
+        if (count($split) > 1) {
+            // Append first path to the base
+            $base = $base . DIRECTORY_SEPARATOR . $split[0];
+            // Make sure the path exists
+            if (!file_exists($base)) {
+                mkdir($base);
+            }
+            // Return the path
+            return self::evaluatePath($split[1], realpath($base));
+        }
+        // Return the last path
+        return $base . DIRECTORY_SEPARATOR . $name;
+    }
+
+    /**
+     * Returns a writable file path for a name.
      * @param string $name File name
      * @param string $hostAPI Host API
      * @param string $guestAPI Guest API
@@ -84,32 +109,14 @@ class Utility
      */
     public static function evaluateFile($name = "", $hostAPI = Base::API, $guestAPI = null)
     {
-        // Find host directory
-        $directory = self::DIRECTORY_ROOT . DIRECTORY_SEPARATOR . $hostAPI;
-        // Make sure the host directory exists
-        if (!file_exists($directory)) mkdir($directory);
-        // Check if we have a guest API
-        if ($guestAPI !== null) {
-            // Find guest directory
-            $directory = $directory . DIRECTORY_SEPARATOR . $guestAPI;
-            // Make sure the guest directory exists
-            if (!file_exists($directory)) mkdir($directory);
-        }
-        // Split name
-        $split = explode(self::DIRECTORY_DELIMITER, $name);
-        // Create directories
-        foreach (array_slice($split, 0, count($split) - 1) as $subdirectory) {
-            // Find subdirectory
-            $directory = $directory . DIRECTORY_SEPARATOR . $subdirectory;
-            // Make sure the subdirectory exists
-            if (!file_exists($directory)) mkdir($directory);
-        }
-        // Return the file path
-        return $directory . DIRECTORY_SEPARATOR . end($split);
+        // Add APIs
+        $name = implode(self::DIRECTORY_DELIMITER, [$hostAPI, $guestAPI, $name]);
+        // Return the path
+        return self::evaluatePath($name);
     }
 
     /**
-     * Returns a directory path for a directory name.
+     * Returns a writable directory path for a name.
      * @param string $name Directory name
      * @param string $hostAPI Host API
      * @param string $guestAPI Guest API

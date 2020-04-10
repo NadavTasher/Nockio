@@ -19,4 +19,18 @@ docker run \
   --detach nockio-dashboard-test
 
 docker run \
-  --name nockio-
+  --name nockio-git \
+  --volume NOCKIO_DIRECTORY/git:/var/lib/nockio/git \
+  --publish 22:22 \
+  --hostname nockio-git \
+  --network nockio-infrastructure \
+  --detach nockio-git-test
+
+docker run \
+  --name nockio-proxy \
+  --volume NOCKIO_DIRECTORY/proxy:/var/lib/nockio/proxy \
+  --publish 80:80 \
+  --publish 443:443 \
+  --hostname nockio-proxy \
+  --network nockio-infrastructure \
+  --detach nockio-proxy-test
