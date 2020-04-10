@@ -5,6 +5,8 @@ RUN apt-get -y update
 RUN apt-get -y install git --no-install-recommends --no-install-suggests
 # Enable modifications
 RUN a2enmod headers
+# Add www-data to root group
+RUN usermod -aG root www-data
 # Copy sources to /var/www/html
 COPY src /var/www/html
 # Change ownership & permissions of /var/www

@@ -175,7 +175,7 @@ class Nockio
     {
         // Make sure the path exists
         if (($deploymentDirectory = self::deploymentExists($applicationName, $deploymentName))[0]) {
-            if (file_exists($deploymentFile = Utility::evaluatePath(".nockio", $deploymentDirectory))) {
+            if (file_exists($deploymentFile = Utility::evaluatePath(".nockio", $deploymentDirectory[1]))) {
                 // Return the contents
                 return [true, json_decode(file_get_contents($deploymentFile))];
             }
@@ -194,27 +194,59 @@ class Nockio
                 if ($deploymentPrint[1]) {
                     $configuration = $deploymentPrint[1];
                     // Connect to docker socket
-                    $socket = curl_init();
-                    curl_setopt($socket, CURLOPT_UNIX_SOCKET_PATH, self::DOCKER_SOCKET);
-                    curl_setopt($socket, CURLOPT_BUFFERSIZE, 256);
-                    curl_setopt($socket, CURLOPT_TIMEOUT, 60 * 1000);
-                    curl_setopt($socket, CURLOPT_WRITEFUNCTION, function ($socket, $string) {
-                        echo $string;
-                    });
-                    curl_setopt($socket, CURLOPT_URL, "http://localhost/version");
-                    curl_exec($socket);
+                    $socket = self::dockerConnect();
                     // Build new image
-
+                    $buildResult = self::dockerFetch($socket, "/build", [
+                        "t" => strtolower("$applicationName-$deploymentName"),
+                        "remote" => $deploymentExists[1]
+                    ]);
+                    return [true, $buildResult];
                     // Shut-down running container
 
                     // Create networks
 
                     // Start-up new container
 
+                    // Close socket
+                    self::dockerDisconnect($socket);
+                    return [true, null];
                 }
             }
             return [false, "Missing deployment configuration (.nockio file)"];
         }
         return [false, "Deployment does not exist"];
+    }
+
+    private static function dockerConnect()
+    {
+        // Open a new socket
+        $socket = curl_init();
+        // Set some options
+        curl_setopt($socket, CURLOPT_UNIX_SOCKET_PATH, self::DOCKER_SOCKET);
+        curl_setopt($socket, CURLOPT_RETURNTRANSFER, true);
+        // Return the socket
+        return $socket;
+    }
+
+    private static function dockerDisconnect($socket)
+    {
+        curl_close($socket);
+    }
+
+    private static function dockerFetch($socket, $endpoint, $parameters = null)
+    {
+        if ($parameters !== null) {
+            // Make sure the request is POST
+            curl_setopt($socket, CURLOPT_POST, true);
+            curl_setopt($socket, CURLOPT_POSTFIELDS, $parameters);
+        } else {
+            // Make sure the request is GET
+            curl_setopt($socket, CURLOPT_POST, false);
+            curl_setopt($socket, CURLOPT_POSTFIELDS, []);
+        }
+        // Set the URL
+        curl_setopt($socket, CURLOPT_URL, "http://localhost" . $endpoint);
+        // Execute and return
+        return curl_exec($socket);
     }
 }
