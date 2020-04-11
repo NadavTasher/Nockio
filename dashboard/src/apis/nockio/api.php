@@ -152,7 +152,7 @@ class Nockio
         return [false, "Application does not exist"];
     }
 
-    private static function compose($applicationDirectory)
+    private static function applicationCompose($applicationDirectory)
     {
         // Craft the command
         $command = "cd $applicationDirectory && docker-compose down && docker-compose up";

@@ -14,10 +14,17 @@ docker run \
   --name nockio-dashboard \
   --volume $NOCKIO_DIRECTORY/git:/var/lib/nockio/git \
   --volume $NOCKIO_DIRECTORY/proxy:/var/lib/nockio/proxy \
-  --volume /var/run/docker.sock:/var/run/docker.sock \
   --hostname nockio-dashboard \
   --network nockio-infrastructure \
   --detach nockio-dashboard-test
+
+docker run \
+  --name nockio-deployer \
+  --volume $NOCKIO_DIRECTORY/git/sources:/var/lib/nockio/git/sources \
+  --volume /var/run/docker.sock:/var/run/docker.sock \
+  --hostname nockio-deployer \
+  --network nockio-infrastructure \
+  --detach nockio-deployer-test
 
 docker run \
   --name nockio-git \
@@ -34,4 +41,5 @@ docker run \
   --publish 443:443 \
   --hostname nockio-proxy \
   --network nockio-infrastructure \
+  --network nockio-applications \
   --detach nockio-proxy-test
