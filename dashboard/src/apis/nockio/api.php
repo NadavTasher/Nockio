@@ -67,55 +67,25 @@ class Nockio
                             $paths = array_slice($paths, 2);
                             // Return the array
                             return [true, $paths];
-                        } else if ($action === "listDeployments") {
+                        } else if ($action === "createApplication") {
                             if (isset($parameters->application)) {
                                 if (is_string($parameters->application)) {
                                     $applicationName = basename($parameters->application);
-                                    // Make sure the application exists
-                                    if (($applicationDirectory = self::applicationExists($applicationName))[0]) {
-                                        // Array of files
-                                        $paths = scandir($applicationDirectory[1]);
-                                        // Remove "." and ".."
-                                        $paths = array_slice($paths, 2);
-                                        // Return the array
-                                        return [true, $paths];
-                                    }
-                                    return [false, "Application does not exist"];
+                                    return self::applicationCreate($applicationName);
                                 }
                                 return [false, "Invalid parameters"];
                             }
                             return [false, "Missing parameters"];
-                        } else if ($action === "printDeployment") {
-                            if (isset($parameters->application) && isset($parameters->deployment)) {
-                                if (is_string($parameters->application) && is_string($parameters->deployment)) {
+                        } else if ($action === "composeApplication") {
+                            if (isset($parameters->application)) {
+                                if (is_string($parameters->application)) {
                                     $applicationName = basename($parameters->application);
-                                    $deploymentName = basename($parameters->deployment);
-                                    return self::deploymentPrint($applicationName, $deploymentName);
+                                    return self::applicationCompose($applicationName);
                                 }
                                 return [false, "Invalid parameters"];
                             }
                             return [false, "Missing parameters"];
-                        } else if ($action === "createDeployment") {
-                            if (isset($parameters->application) && isset($parameters->deployment)) {
-                                if (is_string($parameters->application) && is_string($parameters->deployment)) {
-                                    $applicationName = basename($parameters->application);
-                                    $deploymentName = basename($parameters->deployment);
-                                    return self::deploymentCreate($applicationName, $deploymentName);
-                                }
-                                return [false, "Invalid parameters"];
-                            }
-                            return [false, "Missing parameters"];
-                        } else if ($action === "deployDeployment") {
-                            if (isset($parameters->application) && isset($parameters->deployment)) {
-                                if (is_string($parameters->application) && is_string($parameters->deployment)) {
-                                    $applicationName = basename($parameters->application);
-                                    $deploymentName = basename($parameters->deployment);
-                                    return self::deploymentDeploy($applicationName, $deploymentName);
-                                }
-                                return [false, "Invalid parameters"];
-                            }
-                            return [false, "Missing parameters"];
-                        } else if ($action === "addPublicKey") {
+                        } else if ($action === "addKey") {
                             if (isset($parameters->key) && is_string($parameters->key)) {
                                 // Find authorized_keys path
                                 $targetFilePath = self::DIRECTORY_GIT . DIRECTORY_SEPARATOR . "ssh" . DIRECTORY_SEPARATOR . "authorized_keys";
@@ -143,123 +113,61 @@ class Nockio
 
     private static function applicationExists($applicationName)
     {
-        if (file_exists($path = Utility::evaluatePath("$applicationName", self::DIRECTORY_GIT_SOURCES))) {
-            return [true, $path];
+        if (file_exists(Utility::evaluatePath($applicationName, self::DIRECTORY_GIT_SOURCES))) {
+            return true;
         }
-        return [false, "Application does not exist"];
+        return false;
     }
 
-    private static function deploymentExists($applicationName, $deploymentName)
-    {
-        if (self::applicationExists($applicationName)[0]) {
-            $path = Utility::evaluatePath("$applicationName:$deploymentName", self::DIRECTORY_GIT_SOURCES);
-            return [file_exists($path), $path];
-        }
-        return [false, "Application does not exist"];
-    }
-
-    private static function deploymentCreate($applicationName, $deploymentName)
+    private static function applicationCreate($applicationName)
     {
         // Make sure the path does not exist
-        if (self::applicationExists($applicationName)[0]) {
-            if (!($deploymentExists = self::deploymentExists($applicationName, $deploymentName))[0]) {
-                // Create a new Git repository
-                $repositoryDirectory = $deploymentExists[1];
-                // Create the target directory
-                mkdir($repositoryDirectory, 0777, true);
-                // Create the repository
-                shell_exec("cd $repositoryDirectory && git init");
-                shell_exec("cd $repositoryDirectory && git config --local receive.denyCurrentBranch updateInstead");
-                // Change the permissions
-                shell_exec("chmod 777 -R $repositoryDirectory");
-                // Return the contents
-                return [true, null];
-            }
-            return [false, "Deployment already exists"];
+        if (!self::applicationExists($applicationName)) {
+            // Create a new Git repository
+            $repositoryDirectory = Utility::evaluatePath("$applicationName", self::DIRECTORY_GIT_SOURCES);
+            // Create the target directory
+            mkdir($repositoryDirectory, 0777, true);
+            // Create the repository
+            shell_exec("cd $repositoryDirectory && git init");
+            shell_exec("cd $repositoryDirectory && git config --local receive.denyCurrentBranch updateInstead");
+            // Change the permissions
+            shell_exec("chmod 777 -R $repositoryDirectory");
+            // Return the contents
+            return [true, null];
         }
-        return [false, "Application does not exist"];
+        return [false, "Application already exists"];
     }
 
-    private static function deploymentPrint($applicationName, $deploymentName)
+    private static function applicationPrint($applicationName)
     {
         // Make sure the path exists
-        if (($deploymentDirectory = self::deploymentExists($applicationName, $deploymentName))[0]) {
-            if (file_exists($deploymentFile = Utility::evaluatePath(".nockio", $deploymentDirectory[1]))) {
+        if (self::applicationExists($applicationName)) {
+            if (file_exists($deploymentFile = Utility::evaluatePath("$applicationName:.nockio", self::DIRECTORY_GIT_SOURCES))) {
                 // Return the contents
                 return [true, json_decode(file_get_contents($deploymentFile))];
             }
             // Not deployed yet
             return [true, null];
         }
-        return [false, "Deployment does not exist"];
+        return [false, "Application does not exist"];
     }
 
-    private static function deploymentDeploy($applicationName, $deploymentName)
+    private static function compose($applicationDirectory)
     {
-        // Make sure the deployment exists
-        if (($deploymentExists = self::deploymentExists($applicationName, $deploymentName))[0]) {
-            // Load the .nockio file
-            if (($deploymentPrint = self::deploymentPrint($applicationName, $deploymentName))[0]) {
-                if ($deploymentPrint[1]) {
-                    $configuration = $deploymentPrint[1];
-                    $socket = self::dockerConnect();
-                    // Build new image
-                    $buildResult = Docker::buildImage($deploymentExists[1], strtolower("$applicationName-$deploymentName"));
-                    return $buildResult;
-                    // Shut-down running container
-
-                    // Create networks
-
-                    // Start-up new container
-
-                    // Close socket
-                    self::dockerDisconnect($socket);
-                    return [true, null];
-                }
-            }
-            return [false, "Missing deployment configuration (.nockio file)"];
-        }
-        return [false, "Deployment does not exist"];
-    }
-
-    private static function dockerConnect()
-    {
-        // Open a new socket
-        $socket = curl_init();
-        // Set some options
-        curl_setopt($socket, CURLOPT_UNIX_SOCKET_PATH, self::DOCKER_SOCKET);
-        curl_setopt($socket, CURLOPT_RETURNTRANSFER, true);
-        // Return the socket
-        return $socket;
-    }
-
-    private static function dockerDisconnect($socket)
-    {
-        curl_close($socket);
-    }
-
-    private static function dockerFetch($socket, $endpoint, $parameters = null)
-    {
-        if ($parameters !== null) {
-            // Add the parameters to the URL
-            $query = "";
-            // Append parameters
-            foreach ($parameters as $key => $value) {
-                $query .= "&";
-                $query .= $key;
-                $query .= "=";
-                $query .= urlencode($value);
-            }
-            // Remove last
-            // Make sure the request is POST
-            curl_setopt($socket, CURLOPT_POST, true);
-        } else {
-            // Make sure the request is GET
-            curl_setopt($socket, CURLOPT_POST, false);
-        }
-        // Set the URL
-        curl_setopt($socket, CURLOPT_URL, "http://localhost" . $endpoint);
-        // Execute and return
-        return curl_exec($socket);
+        // Craft the command
+        $command = "cd $applicationDirectory && docker-compose down && docker-compose up";
+        // Execute the command in the deployer
+        $object = new stdClass();
+        $object->Cmd = $command;
+        // Create a context
+        $context = curl_init("http://localhost/containers/nockio-deployer/exec");
+        // Set options
+        curl_setopt($context, CURLOPT_UNIX_SOCKET_PATH, self::DOCKER_SOCKET);
+        curl_setopt($context, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($context, CURLOPT_POST, true);
+        curl_setopt($context, CURLOPT_POSTFIELDS, json_encode($object));
+        // Execute
+        $data = curl_exec($context);
+        return $data;
     }
 }

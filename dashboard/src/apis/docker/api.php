@@ -22,7 +22,7 @@ class Docker
      * @param string $tag Tag
      * @return array Results
      */
-    public static function buildImage($path, $tag)
+    public static function build($path, $tag)
     {
         // Create a new context
         $context = self::createContext("/build?t=$tag", true);
@@ -33,64 +33,44 @@ class Docker
         $phar->buildFromDirectory($path);
         // Add phar
         curl_setopt($context, CURLOPT_POSTFIELDS, file_get_contents($file));
-        curl_setopt($context, CURLOPT_HTTPHEADER, ["Content-Type: application/x-tar"]);
+//        curl_setopt($context, CURLOPT_HTTPHEADER, ["Content-Type: application/x-tar"]);
         // Execute and return
         $result = self::destroyContext($context);
+        // Check result
         if ($result[0] < 300) {
             return [true, "Docker image built"];
         }
-        // Parse results
-        $lines = explode("\n", $result[1]);
-        // Loop over and find ID
-        foreach ($lines as $line) {
-            // Decode the object
-            $object = json_decode($line);
-            // Check if the object has error data
-            if (isset($object->errorDetail)) {
-                // Check if the object has a message
-                if (isset($object->errorDetail->message)) {
-                    // Return success
-                    return [false, $object->errorDetail->message];
-                }
-            }
-        }
-        return [false, "Unknown error"];
+        return [false, "Docker build error"];
     }
 
-    /**
-     * Creates a Docker bridge network.
-     * @param string $name Network name
-     * @return array Results
-     */
-    private static function createNetwork($name)
+    public static function run($tag, $ports = [], $volumes = [], $environment = [])
     {
         // Create a new context
-        $context = self::createContext("/networks/create", true);
-        // Create network object
-        $network = new stdClass();
-        $network->Name = strtolower($name);
-        $network->Driver = "bridge";
-        $network->CheckDuplicate = false;
-        // Set options
-        curl_setopt($context, CURLOPT_POSTFIELDS, json_encode($network));
-        curl_setopt($context, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
+        $context = self::createContext("/containers/create?name=$tag", true);
+        // Set additional options
+        $container = new stdClass();
+        $container->Hostname = $tag;
+        $container->Image = $tag;
+        // Add phar
+        curl_setopt($context, CURLOPT_POSTFIELDS, json_encode($container));
+//        curl_setopt($context, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
         // Execute and return
         $result = self::destroyContext($context);
+        // Check result
         if ($result[0] < 300) {
-            return [true, "Docker network created"];
+            return [true, "Docker image built"];
         }
-        // Parse results
-        $lines = explode("\n", $result[1]);
-        // Loop over and find ID
-        foreach ($lines as $line) {
-            // Decode the object
-            $object = json_decode($line);
-            // Check if the object has error data
-            if (isset($object->message)) {
-                return [false, $object->message];
-            }
-        }
-        return [false, "Unknown error"];
+        return [false, "Docker build error"];
+    }
+
+    private static function stop($tag)
+    {
+
+    }
+
+    private static function remove($tag)
+    {
+
     }
 
     /**
