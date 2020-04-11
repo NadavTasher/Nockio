@@ -1,8 +1,17 @@
 <?php
 
+/**
+ * Copyright (c) 2020 Nadav Tasher
+ * https://github.com/NadavTasher/Nockio/
+ **/
+
 include_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "base" . DIRECTORY_SEPARATOR . "api.php";
+include_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "docker" . DIRECTORY_SEPARATOR . "api.php";
 include_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "authenticate" . DIRECTORY_SEPARATOR . "api.php";
 
+/**
+ * Nockio API for application management.
+ */
 class Nockio
 {
 
@@ -24,13 +33,13 @@ class Nockio
 
     public static function initialize()
     {
+        // Requires authentication
+        Authenticate::initialize();
     }
 
     public static function handle()
     {
         Base::handle(function ($action, $parameters) {
-            // Requires authentication
-            Authenticate::initialize();
             if ($action === "setUp") {
                 if (Authenticate::signUp(self::DEFAULT_USER, null)[1] !== "User already exists") {
                     if (isset($parameters->password)) {
@@ -63,9 +72,9 @@ class Nockio
                                 if (is_string($parameters->application)) {
                                     $applicationName = basename($parameters->application);
                                     // Make sure the application exists
-                                    if ($applicationDirectory = self::applicationExists($applicationName)) {
+                                    if (($applicationDirectory = self::applicationExists($applicationName))[0]) {
                                         // Array of files
-                                        $paths = scandir($applicationDirectory);
+                                        $paths = scandir($applicationDirectory[1]);
                                         // Remove "." and ".."
                                         $paths = array_slice($paths, 2);
                                         // Return the array
@@ -193,14 +202,10 @@ class Nockio
             if (($deploymentPrint = self::deploymentPrint($applicationName, $deploymentName))[0]) {
                 if ($deploymentPrint[1]) {
                     $configuration = $deploymentPrint[1];
-                    // Connect to docker socket
                     $socket = self::dockerConnect();
                     // Build new image
-                    $buildResult = self::dockerFetch($socket, "/build", [
-                        "t" => strtolower("$applicationName-$deploymentName"),
-                        "remote" => $deploymentExists[1]
-                    ]);
-                    return [true, $buildResult];
+                    $buildResult = Docker::buildImage($deploymentExists[1], strtolower("$applicationName-$deploymentName"));
+                    return $buildResult;
                     // Shut-down running container
 
                     // Create networks
@@ -236,13 +241,21 @@ class Nockio
     private static function dockerFetch($socket, $endpoint, $parameters = null)
     {
         if ($parameters !== null) {
+            // Add the parameters to the URL
+            $query = "";
+            // Append parameters
+            foreach ($parameters as $key => $value) {
+                $query .= "&";
+                $query .= $key;
+                $query .= "=";
+                $query .= urlencode($value);
+            }
+            // Remove last
             // Make sure the request is POST
             curl_setopt($socket, CURLOPT_POST, true);
-            curl_setopt($socket, CURLOPT_POSTFIELDS, $parameters);
         } else {
             // Make sure the request is GET
             curl_setopt($socket, CURLOPT_POST, false);
-            curl_setopt($socket, CURLOPT_POSTFIELDS, []);
         }
         // Set the URL
         curl_setopt($socket, CURLOPT_URL, "http://localhost" . $endpoint);
