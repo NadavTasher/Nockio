@@ -20,8 +20,10 @@
             
     applications/
         MyApp1/
-            GUI/
-                // LTS per app
+            .git/
+            .compose.nockio
+            .proxy.nockio
+            .application.nockio
 ```
 
 ### Dashboard bind mounts

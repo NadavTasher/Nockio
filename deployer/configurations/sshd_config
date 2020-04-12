@@ -1,9 +1,0 @@
-# Authentication settings
-UsePAM yes
-PermitRootLogin no
-PubkeyAuthentication no
-PasswordAuthentication yes
-ChallengeResponseAuthentication no
-
-# SFTP settings
-Subsystem sftp /bin/false

@@ -6,7 +6,6 @@
  **/
 
 include_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "base" . DIRECTORY_SEPARATOR . "api.php";
-include_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "docker" . DIRECTORY_SEPARATOR . "api.php";
 include_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "authenticate" . DIRECTORY_SEPARATOR . "api.php";
 
 /**
@@ -41,17 +40,13 @@ class Nockio
     {
         Base::handle(function ($action, $parameters) {
             if ($action === "setUp") {
-                if (Authenticate::signUp(self::DEFAULT_USER, null)[1] !== "User already exists") {
-                    if (isset($parameters->password)) {
-                        if (is_string($parameters->password)) {
-                            Authenticate::signUp("Administrator", $parameters->password);
-                            return [true, "Setup finished"];
-                        }
-                        return [false, "Invalid parameters"];
+                if (isset($parameters->password)) {
+                    if (is_string($parameters->password)) {
+                        return Authenticate::signUp("Administrator", $parameters->password);
                     }
-                    return [false, "Missing parameters"];
+                    return [false, "Invalid parameters"];
                 }
-                return [false, "Already set-up"];
+                return [false, "Missing parameters"];
             } else {
                 // Check for token
                 if (isset($parameters->token) && is_string($parameters->token)) {
@@ -72,15 +67,6 @@ class Nockio
                                 if (is_string($parameters->application)) {
                                     $applicationName = basename($parameters->application);
                                     return self::applicationCreate($applicationName);
-                                }
-                                return [false, "Invalid parameters"];
-                            }
-                            return [false, "Missing parameters"];
-                        } else if ($action === "composeApplication") {
-                            if (isset($parameters->application)) {
-                                if (is_string($parameters->application)) {
-                                    $applicationName = basename($parameters->application);
-                                    return self::applicationCompose($applicationName);
                                 }
                                 return [false, "Invalid parameters"];
                             }
@@ -130,6 +116,8 @@ class Nockio
             // Create the repository
             shell_exec("cd $repositoryDirectory && git init");
             shell_exec("cd $repositoryDirectory && git config --local receive.denyCurrentBranch updateInstead");
+            // Write a post-commit hook
+            file_put_contents(Utility::evaluatePath(".git:hooks:post-update", $repositoryDirectory), file_get_contents(Utility::evaluateFile("post-update", self::API)));
             // Change the permissions
             shell_exec("chmod 777 -R $repositoryDirectory");
             // Return the contents
@@ -142,7 +130,7 @@ class Nockio
     {
         // Make sure the path exists
         if (self::applicationExists($applicationName)) {
-            if (file_exists($deploymentFile = Utility::evaluatePath("$applicationName:.nockio", self::DIRECTORY_GIT_SOURCES))) {
+            if (file_exists($deploymentFile = Utility::evaluatePath("$applicationName:.application.nockio", self::DIRECTORY_GIT_SOURCES))) {
                 // Return the contents
                 return [true, json_decode(file_get_contents($deploymentFile))];
             }
@@ -150,24 +138,5 @@ class Nockio
             return [true, null];
         }
         return [false, "Application does not exist"];
-    }
-
-    private static function applicationCompose($applicationDirectory)
-    {
-        // Craft the command
-        $command = "cd $applicationDirectory && docker-compose down && docker-compose up";
-        // Execute the command in the deployer
-        $object = new stdClass();
-        $object->Cmd = $command;
-        // Create a context
-        $context = curl_init("http://localhost/containers/nockio-deployer/exec");
-        // Set options
-        curl_setopt($context, CURLOPT_UNIX_SOCKET_PATH, self::DOCKER_SOCKET);
-        curl_setopt($context, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($context, CURLOPT_POST, true);
-        curl_setopt($context, CURLOPT_POSTFIELDS, json_encode($object));
-        // Execute
-        $data = curl_exec($context);
-        return $data;
     }
 }

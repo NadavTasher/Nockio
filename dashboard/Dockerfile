@@ -2,6 +2,7 @@
 FROM php:7.4.1-apache
 # Install additional software
 RUN apt-get -y update
+# Install git
 RUN apt-get -y install git --no-install-recommends --no-install-suggests
 # Enable modifications
 RUN a2enmod headers

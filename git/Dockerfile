@@ -3,6 +3,10 @@ FROM debian:buster
 # Install additional software
 RUN apt-get -y update
 RUN apt-get -y install openssh-server git --no-install-recommends --no-install-suggests
+# Install docker-compose
+RUN apt-get -y install python3 python3-pip --no-install-recommends --no-install-suggests
+RUN pip3 install setuptools
+RUN pip3 install docker-compose
 # Set up SSH
 EXPOSE 22
 RUN mkdir /var/run/sshd

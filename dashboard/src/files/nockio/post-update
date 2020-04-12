@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# This hook script is used to deploy an application on Nockio
+#
+# This hook is auto-generated using the Nockio Dashboard application
+
+exec docker-compose --file .compose.nockio up --build --detach --no-color
