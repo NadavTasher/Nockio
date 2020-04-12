@@ -1,0 +1,8 @@
+{
+  "domain": "dashboard.localhost",
+  "hostname": "dashboard",
+  "rules": {
+    "http": "redirect",
+    "https": "downgrade"
+  }
+}

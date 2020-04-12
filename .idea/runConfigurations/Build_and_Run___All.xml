@@ -3,7 +3,7 @@
     <deployment type="docker-compose.yml">
       <settings>
         <option name="commandLineOptions" value="--build" />
-        <option name="sourceFilePath" value="nockio.yml" />
+        <option name="sourceFilePath" value=".compose.nockio" />
       </settings>
     </deployment>
     <method v="2" />

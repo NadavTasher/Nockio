@@ -1,0 +1,52 @@
+{
+  "version": "3.7",
+  "services": {
+    "dashboard": {
+      "build": "dashboard",
+      "image": "nockio:dashboard",
+      "volumes": [
+        "/var/lib/nockio/git:/var/lib/nockio/git"
+      ],
+      "ports": [
+        "8080:80"
+      ],
+      "networks": {
+        "infrastructure": {
+          "aliases": [
+            "dashboard"
+          ]
+        }
+      }
+    },
+    "server": {
+      "build": "server",
+      "image": "nockio:server",
+      "volumes": [
+        "/var/run/docker.sock:/var/run/docker.sock",
+        "/var/lib/nockio/proxy:/var/lib/nockio/proxy",
+        "/var/lib/nockio/git:/var/lib/nockio/git"
+      ],
+      "ports": [
+        "22:22",
+        "80:80",
+        "443:443"
+      ],
+      "networks": {
+        "infrastructure": {
+          "aliases": [
+            "server"
+          ]
+        },
+        "applications": {}
+      }
+    }
+  },
+  "networks": {
+    "infrastructure": {
+      "driver": "bridge"
+    },
+    "applications": {
+      "driver": "bridge"
+    }
+  }
+}

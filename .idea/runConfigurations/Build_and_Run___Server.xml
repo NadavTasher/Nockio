@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Build and Run - Git" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
+  <configuration default="false" name="Build and Run - Server" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
     <deployment type="dockerfile">
       <settings>
         <option name="buildCliOptions" value="" />
