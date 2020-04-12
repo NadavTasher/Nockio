@@ -28,7 +28,11 @@ class Nockio
 
     // Subdirectory roots
     private const DIRECTORY_GIT = self::DIRECTORY_ROOT . DIRECTORY_SEPARATOR . "git";
-    private const DIRECTORY_GIT_SOURCES = self::DIRECTORY_ROOT . DIRECTORY_SEPARATOR . "git" . DIRECTORY_SEPARATOR . "sources";
+    private const DIRECTORY_GIT_SOURCES = self::DIRECTORY_GIT . DIRECTORY_SEPARATOR . "sources";
+
+    private const DIRECTORY_PROXY = self::DIRECTORY_ROOT . DIRECTORY_SEPARATOR . "proxy";
+    private const DIRECTORY_PROXY_CONFIGURATIONS = self::DIRECTORY_PROXY . DIRECTORY_SEPARATOR . "configurations";
+
 
     public static function initialize()
     {
@@ -115,9 +119,8 @@ class Nockio
             mkdir($repositoryDirectory, 0777, true);
             // Create the repository
             shell_exec("cd $repositoryDirectory && git init");
-            shell_exec("cd $repositoryDirectory && git config --local receive.denyCurrentBranch updateInstead");
-            // Write a post-commit hook
-            file_put_contents(Utility::evaluatePath(".git:hooks:post-update", $repositoryDirectory), file_get_contents(Utility::evaluateFile("post-update", self::API)));
+            // Link the proxy configuration
+            link(Utility::evaluatePath("$applicationName", self::DIRECTORY_GIT_SOURCES),)
             // Change the permissions
             shell_exec("chmod 777 -R $repositoryDirectory");
             // Return the contents

@@ -1,50 +1,56 @@
 {
   "version": "3.7",
   "services": {
+    "git": {
+      "build": "git",
+      "image": "nockio:git",
+      "volumes": [
+        "/var/run/docker.sock:/var/run/docker.sock",
+        "/var/lib/nockio/git:/var/lib/nockio/git"
+      ],
+      "ports": [
+        "22:22"
+      ]
+    },
+    "proxy": {
+      "build": "proxy",
+      "image": "nockio:proxy",
+      "volumes": [
+        "/var/lib/nockio/git/sources:/var/lib/nockio/git/sources",
+        "/var/lib/nockio/git/proxy:/var/lib/nockio/git/proxy"
+      ],
+      "ports": [
+        "80:80",
+        "443:443"
+      ],
+      "networks": {
+        "applications": {
+          "aliases": [
+            "proxy"
+          ]
+        }
+      }
+    },
     "dashboard": {
       "build": "dashboard",
       "image": "nockio:dashboard",
       "volumes": [
-        "/var/lib/nockio/git:/var/lib/nockio/git"
+        "/var/lib/nockio/git:/var/lib/nockio/git",
+        "/var/lib/nockio/proxy:/var/lib/nockio/proxy"
       ],
       "ports": [
         "8080:80"
       ],
       "networks": {
-        "infrastructure": {
+        "applications": {
           "aliases": [
             "dashboard"
           ]
         }
       }
-    },
-    "server": {
-      "build": "server",
-      "image": "nockio:server",
-      "volumes": [
-        "/var/run/docker.sock:/var/run/docker.sock",
-        "/var/lib/nockio/proxy:/var/lib/nockio/proxy",
-        "/var/lib/nockio/git:/var/lib/nockio/git"
-      ],
-      "ports": [
-        "22:22",
-        "80:80",
-        "443:443"
-      ],
-      "networks": {
-        "infrastructure": {
-          "aliases": [
-            "server"
-          ]
-        },
-        "applications": {}
-      }
     }
   },
   "networks": {
-    "infrastructure": {
-      "driver": "bridge"
-    },
     "applications": {
       "driver": "bridge"
     }

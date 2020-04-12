@@ -36,3 +36,18 @@ This setting means that HTTPS communications are redirected (internally) to HTTP
 
 ##### Rules: `redirect`
 This setting means that the connection will be redirected (externally) to the second protocol.
+
+
+### Proxy configuration
+http {
+    server {
+        server_name [domain];
+
+        location / {
+            proxy_redirect [to]://[hostname] [from]://[domain];
+        }
+
+        ssl_certificate /var/lib/nockio/proxy/certificates/[domain]/chain.crt;
+        ssl_certificate_key /var/lib/nockio/proxy/certificates/[domain]/private.key;
+    }
+}
