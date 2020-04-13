@@ -4,4 +4,10 @@
 #
 # This hook is auto-generated using the Nockio Dashboard application
 
-exec docker-compose --file ../.compose.nockio up --build --detach --no-color
+# Build the application
+echo "Nockio: Building Application"
+docker-compose --file ../.compose.nockio up --build --detach --no-color 1> /dev/null
+
+# Restart the proxy
+echo "Nockio: Restarting Proxy"
+curl --silent --unix-socket /var/run/docker.sock http://localhost/containers/proxy/restart 1> /dev/null

@@ -7,6 +7,7 @@ EXPOSE 22
 # Install additional software
 RUN apt-get -y update
 RUN apt-get -y install git --no-install-recommends --no-install-suggests
+RUN apt-get -y install curl --no-install-recommends --no-install-suggests
 RUN apt-get -y install openssh-server --no-install-recommends --no-install-suggests
 
 # Install python3

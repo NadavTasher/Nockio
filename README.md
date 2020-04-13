@@ -75,3 +75,18 @@ This setting means that the connection will be redirected (externally) to the se
     ProxyPassReverse / http://dashboard/
 </VirtualHost>
 ```
+
+```apacheconfig
+<VirtualHost *:80>
+    ServerName dashboard.localhost
+    Redirect / https://dashboard.localhost/
+</VirtualHost>
+<VirtualHost *:443>
+    SSLEngine On
+    ServerName dashboard.localhost
+    SSLCertificateFile /var/lib/nockio/proxy/certificates/dashboard.localhost/certificate.crt
+    SSLCertificateKeyFile /var/lib/nockio/proxy/certificates/dashboard.localhost/private.key
+    ProxyPass / http://dashboard/
+    ProxyPassReverse / http://dashboard/
+</VirtualHost>
+```
