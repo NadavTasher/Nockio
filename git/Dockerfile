@@ -20,12 +20,14 @@ RUN pip3 install docker-compose
 RUN mkdir -p /etc/git
 # Copy hooks
 COPY configurations/git/hooks /etc/git/hooks
+RUN chmod +x -R /etc/git/hooks
 # Change configuration
-RUN git config --system receive.denyCurrentBranch updateInstead
 RUN git config --system core.hooksPath /etc/git/hooks
+RUN git config --system receive.denyCurrentBranch updateInstead
 
 # Set up SSH
-#RUN mkdir /var/run/sshd
+RUN mkdir /var/run/sshd
+# Change configuration
 COPY configurations/ssh/sshd_config /etc/ssh/sshd_config
 
 # Create the user

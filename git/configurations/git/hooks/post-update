@@ -4,4 +4,4 @@
 #
 # This hook is auto-generated using the Nockio Dashboard application
 
-exec docker-compose --file .compose.nockio up --build --detach --no-color
+exec docker-compose --file ../.compose.nockio up --build --detach --no-color

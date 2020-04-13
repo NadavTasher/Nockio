@@ -120,7 +120,7 @@ class Nockio
             // Create the repository
             shell_exec("cd $repositoryDirectory && git init");
             // Link the proxy configuration
-            link(Utility::evaluatePath("$applicationName", self::DIRECTORY_GIT_SOURCES),)
+            symlink(Utility::evaluatePath("$applicationName:.proxy.nockio", self::DIRECTORY_GIT_SOURCES), Utility::evaluatePath("$applicationName.conf", self::DIRECTORY_PROXY_CONFIGURATIONS));
             // Change the permissions
             shell_exec("chmod 777 -R $repositoryDirectory");
             // Return the contents
