@@ -29,7 +29,7 @@ class Nockio {
     }
 
     static loadApplications() {
-        this.loading();
+        this.loading("Loading applications");
         // Send the API call
         API.call(NOCKIO_API, "listApplications", {
             token: Authenticate.token
@@ -74,7 +74,7 @@ class Nockio {
     }
 
     static loadApplication(name) {
-        this.loading();
+        this.loading("Loading application");
         // Fetch the application data
         API.call(NOCKIO_API, "printApplication", {
             application: name,
@@ -83,7 +83,7 @@ class Nockio {
             if (status) {
                 // Initialize the description
                 let description = "No description provided";
-                let services = [];
+                let services = ["No services provided"];
                 // Check the status
                 if (result !== null) {
                     if (result.hasOwnProperty("description"))
@@ -112,13 +112,59 @@ class Nockio {
                 });
                 // Set the pane
                 UI.view("application-pane");
+            } else {
+                this.loading(result);
             }
         });
     }
 
-    static loading() {
-        UI.view("loading-pane");
+    static createApplication() {
+        // Find name
+        let name = UI.find("creation-name").value;
+        if (name.length > 0) {
+            this.loading("Creating application");
+            // Send the key
+            API.call(NOCKIO_API, "createApplication", {
+                application: name,
+                token: Authenticate.token
+            }, (status, result) => {
+                if (status) {
+                    this.loadApplications();
+                } else {
+                    this.loading(result);
+                }
+            });
+        }
     }
 
+    static addKey() {
+        // Find key
+        let key = UI.find("key-text").value;
+        if (key.length > 0) {
+            this.loading("Adding key");
+            // Send the key
+            API.call(NOCKIO_API, "addKey", {
+                key: key,
+                token: Authenticate.token
+            }, (status, result) => {
+                if (status) {
+                    this.loadApplications();
+                } else {
+                    this.loading(result);
+                }
+            });
+        }
+    }
+
+    static loading(text = null) {
+        UI.view("loading-pane");
+        // Set text
+        if (text !== null) {
+            UI.find("loading-text").innerText = text;
+            UI.show("loading-text");
+        } else {
+            UI.hide("loading-text");
+        }
+    }
 
 }

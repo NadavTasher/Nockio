@@ -14,8 +14,6 @@ body {
     max-width: 460px;
 }
 
-/* ID based styles */
-
 /* Heights */
 
 #top-pane {
@@ -25,9 +23,9 @@ body {
 }
 
 #content-pane {
-    height: 86vh;
-    min-height: 86vh;
-    max-height: 86vh;
+    height: 90vh;
+    min-height: 90vh;
+    max-height: 90vh;
 }
 
 #content-pane > div {
@@ -51,7 +49,7 @@ body {
 
 #content-pane {
     /* Padding */
-    padding: 2vh;
+    /*padding: 2vh;*/
     /* Alignment */
     justify-content: start;
 }

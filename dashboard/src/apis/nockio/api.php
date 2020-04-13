@@ -28,6 +28,7 @@ class Nockio
 
     // Subdirectory roots
     private const DIRECTORY_GIT = self::DIRECTORY_ROOT . DIRECTORY_SEPARATOR . "git";
+    private const DIRECTORY_GIT_SSH = self::DIRECTORY_GIT . DIRECTORY_SEPARATOR . "ssh";
     private const DIRECTORY_GIT_SOURCES = self::DIRECTORY_GIT . DIRECTORY_SEPARATOR . "sources";
 
     public static function initialize()
@@ -63,18 +64,23 @@ class Nockio
                             $filtered = [];
                             // Filter applications
                             foreach ($paths as $path) {
-                                // Filter
-                                if ($path[0] === ".") continue;
-                                // Add to array
-                                array_push($filtered, $path);
+                                // Check sanitation
+                                $applicationName = self::applicationName($path);
+                                if ($applicationName !== null) {
+                                    // Add to array
+                                    array_push($filtered, $applicationName);
+                                }
                             }
                             // Return the array
                             return [true, $filtered];
                         } else if ($action === "createApplication") {
                             if (isset($parameters->application)) {
                                 if (is_string($parameters->application)) {
-                                    $applicationName = basename($parameters->application);
-                                    return self::applicationCreate($applicationName);
+                                    $applicationName = self::applicationName($parameters->application);
+                                    if ($applicationName !== null) {
+                                        return self::applicationCreate($applicationName);
+                                    }
+                                    return [false, "Invalid name"];
                                 }
                                 return [false, "Invalid parameters"];
                             }
@@ -82,8 +88,11 @@ class Nockio
                         } else if ($action === "printApplication") {
                             if (isset($parameters->application)) {
                                 if (is_string($parameters->application)) {
-                                    $applicationName = basename($parameters->application);
-                                    return self::applicationPrint($applicationName);
+                                    $applicationName = self::applicationName($parameters->application);
+                                    if ($applicationName !== null) {
+                                        return self::applicationPrint($applicationName);
+                                    }
+                                    return [false, "Invalid name"];
                                 }
                                 return [false, "Invalid parameters"];
                             }
@@ -91,8 +100,11 @@ class Nockio
                         } else if ($action === "logApplication") {
                             if (isset($parameters->application)) {
                                 if (is_string($parameters->application)) {
-                                    $applicationName = basename($parameters->application);
-                                    return self::applicationLog($applicationName);
+                                    $applicationName = self::applicationName($parameters->application);
+                                    if ($applicationName !== null) {
+                                        return self::applicationLog($applicationName);
+                                    }
+                                    return [false, "Invalid name"];
                                 }
                                 return [false, "Invalid parameters"];
                             }
@@ -100,7 +112,7 @@ class Nockio
                         } else if ($action === "addKey") {
                             if (isset($parameters->key) && is_string($parameters->key)) {
                                 // Find authorized_keys path
-                                $targetFilePath = self::DIRECTORY_GIT . DIRECTORY_SEPARATOR . "ssh" . DIRECTORY_SEPARATOR . "authorized_keys";
+                                $targetFilePath = Utility::evaluatePath("authorized_keys", self::DIRECTORY_GIT_SSH);
                                 // Read contents
                                 $contents = "";
                                 if (file_exists($targetFilePath)) {
@@ -121,6 +133,19 @@ class Nockio
                 return [false, "Authentication failure"];
             }
         });
+    }
+
+    private static function applicationName($string)
+    {
+        // Basename
+        $string = basename($string);
+        // Loop over chars
+        foreach (str_split($string) as $char) {
+            if (array_search($char, str_split("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ", 1)) === false)
+                return null;
+        }
+        // Return string
+        return $string;
     }
 
     private static function applicationExists($applicationName)

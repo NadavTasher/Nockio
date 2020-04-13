@@ -51,7 +51,7 @@
 </div>
 <div id="authenticated" column>
     <div id="top-pane" row>
-        <img id="top-pane-icon" src="images/icons/icon.png" alt="Nockio Icon"/>
+        <img id="top-pane-icon" src="images/icons/icon.png" alt="Nockio Icon" onclick="Nockio.loadApplications();"/>
     </div>
     <div id="content-pane" column>
         <div id="applications-pane" column>
@@ -79,26 +79,27 @@
         <div id="creation-pane" column>
             <p style="justify-content: start; font-size: 4vh;">Create a new application</p>
             <input id="creation-name" style="height: 8vh; background-color: #AACCAA;" type="text" placeholder="Application Name" coasted/>
-            <button style="background-color: transparent; font-size: 4vh;">Create</button>
+            <button style="background-color: transparent; font-size: 4vh;" onclick="Nockio.createApplication();">Create</button>
         </div>
         <div id="key-pane" column>
             <p style="justify-content: start; font-size: 4vh;">Add a new SSH public key</p>
             <textarea style="height: 30vh; background-color: #AACCAA;" id="key-text" placeholder="Public Key" coasted></textarea>
-            <button style="background-color: transparent; font-size: 4vh;">Add</button>
+            <button style="background-color: transparent; font-size: 4vh;" onclick="Nockio.addKey();">Add</button>
         </div>
         <div id="loading-pane" column>
             <div id="spinner"></div>
+            <p style="padding: 2vh; font-size: 3vh;" id="loading-text"></p>
         </div>
     </div>
 </div>
 <!-- Templates -->
 <template name="application">
     <div style="height: 15vh; background-color: #AAAACC;" coasted row>
-        <div style="width: 80%;" column>
+        <div style="width: 80%; min-width: 80%; max-width: 80%;" column>
             <p style="justify-content: start; font-size: 4vh;">${name}</p>
             <p style="justify-content: start; font-size: 2vh;">${description}</p>
         </div>
-        <img style="width: 20%; padding: 2vh;" onclick="Nockio.loadApplication('${name}');" src="https://raw.githubusercontent.com/github/explore/master/topics/${platform}/${platform}.png" alt="Platform"/>
+        <img style="width: 20%; min-width: 20%; max-width: 20%; margin: 2vh;" onclick="Nockio.loadApplication('${name}');" src="https://raw.githubusercontent.com/github/explore/master/topics/${platform}/${platform}.png" alt="Platform"/>
     </div>
 </template>
 <template name="log">
