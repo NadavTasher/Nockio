@@ -40,13 +40,7 @@ class Nockio {
                 UI.clear(list);
                 // Loop over array
                 for (let applicationName of result) {
-                    let applicationView = document.createElement("div");
-                    // Add class
-                    applicationView.classList.add("application");
-                    // Add paragraphs
-                    let applicationNameView = document.createElement("p");
-                    applicationNameView.innerText = applicationName;
-                    applicationView.appendChild(applicationNameView);
+                    list.appendChild(UI.create("application", {name: applicationName, description: "Hello"}));
                 }
                 // Change the pane
                 UI.view(list);
@@ -58,22 +52,5 @@ class Nockio {
 
     }
 
-    static template(name) {
-        // Find document templates
-        let templatesElement = document.getElementsByTagName("templates")[0];
-        if (templatesElement !== undefined) {
-            let templateElement = undefined;
-            for (let template of templatesElement.children) {
-                if (template.tagName === name) {
-                    templateElement = template;
-                }
-            }
-            if (templateElement !== undefined) {
-                return function (parameters) {
-
-                };
-            }
-        }
-    }
 
 }

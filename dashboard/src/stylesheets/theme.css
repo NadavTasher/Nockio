@@ -24,6 +24,11 @@ body {
     background-color: var(--theme);
 }
 
+templates {
+    /* Display */
+    display: none;
+}
+
 p, button, input, select, div, body, html {
     /* Display */
     display: flex;

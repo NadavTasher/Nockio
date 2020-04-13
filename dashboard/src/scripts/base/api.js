@@ -210,4 +210,35 @@ class UI {
         view.innerHTML = "";
     }
 
+    /**
+     * Finds a template and creates a clone of it.
+     * @param template Template name
+     * @param parameters Cloning parameters
+     */
+    static create(template, parameters = {}) {
+        // Find the template
+        let templatesElement = document.getElementsByTagName("templates")[0];
+        if (templatesElement !== undefined) {
+            // Find the template
+            for (let templateElement of templatesElement.children) {
+                if (templateElement.tagName.toLowerCase() === template.toLowerCase()) {
+                    // Create the element
+                    let created = document.createElement("div");
+                    // Add the HTML
+                    created.innerHTML = templateElement.innerHTML;
+                    // Replace parameters
+                    for (let key in parameters) {
+                        if (key in parameters) {
+                            created.innerHTML = created.innerHTML.replace("${" + key + "}", parameters[key]);
+                        }
+                    }
+                    // Return created element
+                    return created.children[0];
+                }
+            }
+        }
+        // Result default undefined
+        return undefined;
+    }
+
 }
