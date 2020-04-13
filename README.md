@@ -39,15 +39,39 @@ This setting means that the connection will be redirected (externally) to the se
 
 
 ### Proxy configuration
-http {
-    server {
-        server_name [domain];
+```
+ 
+<VirtualHost *:80>
+    Redirect permanent "https://%{HTTP_HOST}%{REQUEST_URI}"
+</VirtualHost>
+<VirtualHost *:443>
+    SSLEngine                       on
+    ProxyPreserveHost               on
+</VirtualHost>
 
-        location / {
-            proxy_redirect [to]://[hostname] [from]://[domain];
-        }
+<VirtualHost *:80>
+    ServerName [DOMAIN]
+</VirtualHost>
+<VirtualHost *:443>
+    ServerName [DOMAIN]
+    SSLCertificateFile /var/lib/nockio/proxy/certificates/[DOMAIN]/certificate.pem
+    SSLCertificateKeyFile /var/lib/nockio/proxy/certificates/[DOMAIN]/private.pem
+    SSLCertificateChainFile /var/lib/nockio/proxy/certificates/[DOMAIN]/chain.pem
+    ProxyPass / http://[APPLICATION]/
+    ProxyPassReverse / http://[APPLICATION]/
+</VirtualHost>
+```
 
-        ssl_certificate /var/lib/nockio/proxy/certificates/[domain]/chain.crt;
-        ssl_certificate_key /var/lib/nockio/proxy/certificates/[domain]/private.key;
-    }
-}
+```apacheconfig
+<VirtualHost *:80>
+    ServerName dashboard.localhost
+</VirtualHost>
+<VirtualHost *:443>
+    ServerName dashboard.localhost
+    SSLCertificateFile /var/lib/nockio/proxy/certificates/dashboard.localhost/certificate.pem
+    SSLCertificateKeyFile /var/lib/nockio/proxy/certificates/dashboard.localhost/private.pem
+    SSLCertificateChainFile /var/lib/nockio/proxy/certificates/dashboard.localhost/chain.pem
+    ProxyPass / http://dashboard/
+    ProxyPassReverse / http://dashboard/
+</VirtualHost>
+```

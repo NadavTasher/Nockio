@@ -17,7 +17,7 @@
       "image": "nockio:proxy",
       "volumes": [
         "/var/lib/nockio/git/sources:/var/lib/nockio/git/sources",
-        "/var/lib/nockio/git/proxy:/var/lib/nockio/git/proxy"
+        "/var/lib/nockio/proxy:/var/lib/nockio/proxy"
       ],
       "ports": [
         "80:80",
