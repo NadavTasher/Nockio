@@ -29,6 +29,7 @@ class Nockio {
     }
 
     static loadApplications() {
+        this.loading();
         // Send the API call
         API.call(NOCKIO_API, "listApplications", {
             token: Authenticate.token
@@ -40,7 +41,31 @@ class Nockio {
                 UI.clear(list);
                 // Loop over array
                 for (let applicationName of result) {
-                    list.appendChild(UI.create("application", {name: applicationName, description: "Hello"}));
+                    // Fetch the application data
+                    API.call(NOCKIO_API, "printApplication", {
+                        application: applicationName,
+                        token: Authenticate.token
+                    }, (status, result) => {
+                        // Initialize the description
+                        let applicationDescription = "No description provided";
+                        let applicationPlatform = "docker";
+                        // Check the status
+                        if (status) {
+                            if (result !== null) {
+                                if (result.hasOwnProperty("description"))
+                                    applicationDescription = result.description;
+                                if (result.hasOwnProperty("services"))
+                                    if (result.services.length > 0)
+                                        applicationPlatform = result.services[0];
+                            }
+                        }
+                        // Create the view
+                        list.appendChild(UI.create("application", {
+                            name: applicationName,
+                            description: applicationDescription,
+                            platform: applicationPlatform.toLowerCase()
+                        }));
+                    });
                 }
                 // Change the pane
                 UI.view(list);
@@ -49,7 +74,11 @@ class Nockio {
     }
 
     static loadApplication(name) {
+        this.loading();
+    }
 
+    static loading() {
+        UI.view("loading-pane");
     }
 
 

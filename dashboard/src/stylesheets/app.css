@@ -23,7 +23,11 @@ body {
 }
 
 #content-pane {
-    height: 90vh;
+    height: 86vh;
+}
+
+#content-pane > div {
+    height: 100%;
 }
 
 /* Icon */
@@ -34,15 +38,38 @@ body {
 
 /* Scroll */
 
-/* Classes */
+/* Panes */
 
-[application] {
-    /* Height */
-    min-height: 20vh;
-    /* Background */
-    background-color: var(--bright);
+#content-pane {
+    padding: 2vh;
 }
 
-[application] > p {
+#applications-pane {
     justify-content: start;
+}
+
+/* Loading pane */
+
+#spinner {
+    /* Alignment */
+    align-self: center;
+    /* Border widths and colors */
+    border: 1vh solid var(--theme);
+    border-top: 1vh solid var(--dark);
+    /* Border radius */
+    border-radius: 50%;
+    /* Size */
+    height: 7vh;
+    width: 7vh;
+    /* Animation */
+    animation: spin 0.5s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }

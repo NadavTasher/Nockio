@@ -63,15 +63,20 @@
         <div id="creation-pane" column>
 
         </div>
+        <div id="loading-pane" column>
+            <div id="spinner"></div>
+        </div>
     </div>
 </div>
-</body>
-<templates>
-    <application>
-        <div application column>
-            <p style="font-size: 4vh">${name}</p>
-            <p style="font-size: 3vh">${description}</p>
+<!-- Templates -->
+<template name="application">
+    <div style="height: 15vh; background-color: #AAAACC; border-radius: 2vh;" row>
+        <div style="width: 80%;" column>
+            <p style="justify-content: start; font-size: 4vh;">${name}</p>
+            <p style="justify-content: start; font-size: 2vh;">${description}</p>
         </div>
-    </application>
-</templates>
+        <img style="width: 20%; padding: 2vh;" onclick="Nockio.loadApplication('${name}');" src="https://raw.githubusercontent.com/github/explore/master/topics/${platform}/${platform}.png" alt="Platform"/>
+    </div>
+</template>
+</body>
 </html>

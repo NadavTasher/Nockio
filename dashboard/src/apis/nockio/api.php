@@ -59,15 +59,31 @@ class Nockio
                             $hostDirectory = Utility::evaluatePath("", self::DIRECTORY_GIT_SOURCES);
                             // Array of files
                             $paths = scandir($hostDirectory);
-                            // Remove "." and ".."
-                            $paths = array_slice($paths, 2);
+                            // Check for invalid app names
+                            $filtered = [];
+                            // Filter applications
+                            foreach ($paths as $path) {
+                                // Filter
+                                if ($path[0] === ".") continue;
+                                // Add to array
+                                array_push($filtered, $path);
+                            }
                             // Return the array
-                            return [true, $paths];
+                            return [true, $filtered];
                         } else if ($action === "createApplication") {
                             if (isset($parameters->application)) {
                                 if (is_string($parameters->application)) {
                                     $applicationName = basename($parameters->application);
                                     return self::applicationCreate($applicationName);
+                                }
+                                return [false, "Invalid parameters"];
+                            }
+                            return [false, "Missing parameters"];
+                        }else if ($action === "printApplication") {
+                            if (isset($parameters->application)) {
+                                if (is_string($parameters->application)) {
+                                    $applicationName = basename($parameters->application);
+                                    return self::applicationPrint($applicationName);
                                 }
                                 return [false, "Invalid parameters"];
                             }
