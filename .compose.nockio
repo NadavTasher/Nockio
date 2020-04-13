@@ -35,7 +35,7 @@
       "container_name": "dashboard",
       "volumes": [
         "/var/lib/nockio/git:/var/lib/nockio/git",
-        "/var/lib/nockio/proxy:/var/lib/nockio/proxy"
+        "/var/lib/nockio/dashboard:/var/www/html/files/database"
       ],
       "ports": [
         "8080:80"
