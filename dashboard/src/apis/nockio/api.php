@@ -79,11 +79,20 @@ class Nockio
                                 return [false, "Invalid parameters"];
                             }
                             return [false, "Missing parameters"];
-                        }else if ($action === "printApplication") {
+                        } else if ($action === "printApplication") {
                             if (isset($parameters->application)) {
                                 if (is_string($parameters->application)) {
                                     $applicationName = basename($parameters->application);
                                     return self::applicationPrint($applicationName);
+                                }
+                                return [false, "Invalid parameters"];
+                            }
+                            return [false, "Missing parameters"];
+                        } else if ($action === "logApplication") {
+                            if (isset($parameters->application)) {
+                                if (is_string($parameters->application)) {
+                                    $applicationName = basename($parameters->application);
+                                    return self::applicationLog($applicationName);
                                 }
                                 return [false, "Invalid parameters"];
                             }
@@ -144,9 +153,23 @@ class Nockio
     {
         // Make sure the path exists
         if (self::applicationExists($applicationName)) {
-            if (file_exists($deploymentFile = Utility::evaluatePath("$applicationName:.application.nockio", self::DIRECTORY_GIT_SOURCES))) {
+            if (file_exists($applicationFile = Utility::evaluatePath("$applicationName:.application.nockio", self::DIRECTORY_GIT_SOURCES))) {
                 // Return the contents
-                return [true, json_decode(file_get_contents($deploymentFile))];
+                return [true, json_decode(file_get_contents($applicationFile))];
+            }
+            // Not deployed yet
+            return [true, null];
+        }
+        return [false, "Application does not exist"];
+    }
+
+    private static function applicationLog($applicationName)
+    {
+        // Make sure the path exists
+        if (self::applicationExists($applicationName)) {
+            if (file_exists($logFile = Utility::evaluatePath("$applicationName:.log.compose.nockio", self::DIRECTORY_GIT_SOURCES))) {
+                // Return the contents
+                return [true, file_get_contents($logFile)];
             }
             // Not deployed yet
             return [true, null];

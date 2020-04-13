@@ -36,7 +36,7 @@ class Nockio {
         }, (status, result) => {
             if (status) {
                 // Find the list
-                let list = UI.find("applications-pane");
+                let list = UI.find("applications-list");
                 // Clear the list
                 UI.clear(list);
                 // Loop over array
@@ -68,13 +68,51 @@ class Nockio {
                     });
                 }
                 // Change the pane
-                UI.view(list);
+                UI.view("applications-pane");
             }
         });
     }
 
     static loadApplication(name) {
         this.loading();
+        // Find application pane
+        let pane = UI.find("application-pane");
+        // Clear the pane
+        UI.clear(pane);
+        // Fetch the application data
+        API.call(NOCKIO_API, "printApplication", {
+            application: name,
+            token: Authenticate.token
+        }, (status, result) => {
+            if (status) {
+                // Initialize the description
+                let applicationDescription = "No description provided";
+                let applicationServices = ["docker"];
+                // Check the status
+                if (result !== null) {
+                    if (result.hasOwnProperty("description"))
+                        applicationDescription = result.description;
+                    if (result.hasOwnProperty("services"))
+                        applicationServices = result.services;
+                }
+                // Create the views
+                pane.appendChild(UI.create("information", {
+                    name: "Name",
+                    value: name
+                }));
+                pane.appendChild(UI.create("information", {
+                    name: "Description",
+                    value: applicationDescription
+                }));
+                pane.appendChild(UI.create("services", {
+                    names: applicationServices.join(", "),
+                    platformA: applicationServices[0].toLowerCase(),
+                    platformB: applicationServices[1].toLowerCase(),
+                    platformC: applicationServices[2].toLowerCase(),
+                }));
+                UI.view(pane);
+            }
+        });
     }
 
     static loading() {

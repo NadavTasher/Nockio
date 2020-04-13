@@ -6,7 +6,7 @@
 
 # Build the application
 echo "Nockio: Building Application"
-docker-compose --file ../.compose.nockio up --build --detach --no-color 1> /dev/null
+docker-compose --file ../.compose.nockio up --build --detach --no-color 1> ../.log.compose.nockio
 
 # Restart the proxy
 echo "Nockio: Restarting Proxy"

@@ -55,13 +55,16 @@
     </div>
     <div id="content-pane" column>
         <div id="applications-pane" column>
-
+            <button>New Application</button>
+            <div id="applications-list" column></div>
         </div>
         <div id="application-pane" column>
 
         </div>
         <div id="creation-pane" column>
-
+            <p style="justify-content: start; font-size: 4vh;">Create a new application</p>
+            <input id="creation-name" type="text" placeholder="Application Name"/>
+            <button>Next</button>
         </div>
         <div id="loading-pane" column>
             <div id="spinner"></div>
@@ -70,12 +73,32 @@
 </div>
 <!-- Templates -->
 <template name="application">
-    <div style="height: 15vh; background-color: #AAAACC; border-radius: 2vh;" row>
+    <div style="height: 15vh; margin: 1vh 0; background-color: #AAAACC; border-radius: 2vh;" row>
         <div style="width: 80%;" column>
             <p style="justify-content: start; font-size: 4vh;">${name}</p>
             <p style="justify-content: start; font-size: 2vh;">${description}</p>
         </div>
-        <img style="width: 20%; padding: 2vh;" onclick="Nockio.loadApplication('${name}');" src="https://raw.githubusercontent.com/github/explore/master/topics/${platform}/${platform}.png" alt="Platform"/>
+        <img style="width: 20%; padding: 2vh;" onclick="Nockio.loadApplication('${name}');" src="https://raw.githubusercontent.com/github/explore/master/topics/${platform}/${platform}.png"
+             alt="Platform"/>
+    </div>
+</template>
+<template name="information">
+    <div style="height: 15vh; margin: 1vh 0; background-color: #AACCAA; border-radius: 2vh;" column>
+        <p style="justify-content: start; font-size: 4vh;">${name}</p>
+        <p style="justify-content: start; font-size: 2vh;">${value}</p>
+    </div>
+</template>
+<template name="services">
+    <div style="height: 15vh; margin: 1vh 0; background-color: #AAAACC; border-radius: 2vh;" row>
+        <div column>
+            <p style="justify-content: start; font-size: 4vh;">Services</p>
+            <p style="justify-content: start; font-size: 2vh;">${names}</p>
+        </div>
+        <div style="align-items: center;" row>
+            <img style="height: 10vh; width: 10vh; padding: 1vh; margin-right: -7vh;" src="https://raw.githubusercontent.com/github/explore/master/topics/${platformA}/${platformA}.png" alt="Platform 1"/>
+            <img style="height: 10vh; width: 10vh; padding: 1vh; margin-right: -7vh;" src="https://raw.githubusercontent.com/github/explore/master/topics/${platformB}/${platformB}.png" alt="Platform 2"/>
+            <img style="height: 10vh; width: 10vh; padding: 1vh;" src="https://raw.githubusercontent.com/github/explore/master/topics/${platformC}/${platformC}.png" alt="Platform 3"/>
+        </div>
     </div>
 </template>
 </body>

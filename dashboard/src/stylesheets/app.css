@@ -44,7 +44,7 @@ body {
     padding: 2vh;
 }
 
-#applications-pane {
+#applications-pane, #application-pane {
     justify-content: start;
 }
 
@@ -54,7 +54,6 @@ body {
     /* Alignment */
     align-self: center;
     /* Border widths and colors */
-    border: 1vh solid var(--theme);
     border-top: 1vh solid var(--dark);
     /* Border radius */
     border-radius: 50%;
