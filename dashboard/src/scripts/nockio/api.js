@@ -75,10 +75,6 @@ class Nockio {
 
     static loadApplication(name) {
         this.loading();
-        // Find application pane
-        let pane = UI.find("application-pane");
-        // Clear the pane
-        UI.clear(pane);
         // Fetch the application data
         API.call(NOCKIO_API, "printApplication", {
             application: name,
@@ -86,31 +82,36 @@ class Nockio {
         }, (status, result) => {
             if (status) {
                 // Initialize the description
-                let applicationDescription = "No description provided";
-                let applicationServices = ["docker"];
+                let description = "No description provided";
+                let services = [];
                 // Check the status
                 if (result !== null) {
                     if (result.hasOwnProperty("description"))
-                        applicationDescription = result.description;
+                        description = result.description;
                     if (result.hasOwnProperty("services"))
-                        applicationServices = result.services;
+                        services = result.services;
                 }
                 // Create the views
-                pane.appendChild(UI.create("information", {
-                    name: "Name",
-                    value: name
-                }));
-                pane.appendChild(UI.create("information", {
-                    name: "Description",
-                    value: applicationDescription
-                }));
-                pane.appendChild(UI.create("services", {
-                    names: applicationServices.join(", "),
-                    platformA: applicationServices[0].toLowerCase(),
-                    platformB: applicationServices[1].toLowerCase(),
-                    platformC: applicationServices[2].toLowerCase(),
-                }));
-                UI.view(pane);
+                UI.find("application-name").innerText = "Name - " + name;
+                UI.find("application-description").innerText = "Description - " + description;
+                UI.find("application-services").innerText = services.join(", ");
+                // Fetch the log
+                API.call(NOCKIO_API, "logApplication", {
+                    application: name,
+                    token: Authenticate.token
+                }, (status, result) => {
+                    let list = UI.find("application-log");
+                    // Clear list
+                    UI.clear(list);
+                    // Split log
+                    let lines = result.split("\n");
+                    // Add all
+                    for (let line of lines) {
+                        list.appendChild(UI.create("log", {text: line}));
+                    }
+                });
+                // Set the pane
+                UI.view("application-pane");
             }
         });
     }

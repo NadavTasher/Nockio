@@ -20,10 +20,14 @@ body {
 
 #top-pane {
     height: 10vh;
+    min-height: 10vh;
+    max-height: 10vh;
 }
 
 #content-pane {
     height: 86vh;
+    min-height: 86vh;
+    max-height: 86vh;
 }
 
 #content-pane > div {
@@ -31,6 +35,7 @@ body {
 }
 
 /* Icon */
+
 #top-pane-icon {
     width: auto;
     height: inherit;
@@ -38,14 +43,39 @@ body {
 
 /* Scroll */
 
+#content-pane {
+    overflow-y: auto;
+}
+
 /* Panes */
 
 #content-pane {
+    /* Padding */
     padding: 2vh;
+    /* Alignment */
+    justify-content: start;
 }
 
 #applications-pane, #application-pane {
+    /* Alignment */
     justify-content: start;
+}
+
+/* Coasted styles */
+
+[coasted] {
+    /* Margin and padding */
+    margin: 1vh 0 !important;
+    padding: 2vh !important;
+    /* Border */
+    border: none;
+    outline: none;
+    border-radius: 2vh;
+    /* Disable resizing */
+    resize: none;
+    /* Text alignment */
+    text-align: left;
+    text-align-last: left;
 }
 
 /* Loading pane */
@@ -54,6 +84,7 @@ body {
     /* Alignment */
     align-self: center;
     /* Border widths and colors */
+    border: 1vh solid transparent;
     border-top: 1vh solid var(--dark);
     /* Border radius */
     border-radius: 50%;
