@@ -2,8 +2,9 @@
   "version": "3.7",
   "services": {
     "git": {
+      "image": "nockio/git",
       "build": "git",
-      "image": "nockio:git",
+      "hostname": "git",
       "container_name": "git",
       "volumes": [
         "/var/run/docker.sock:/var/run/docker.sock",
@@ -14,8 +15,9 @@
       ]
     },
     "proxy": {
+      "image": "nockio/proxy",
       "build": "proxy",
-      "image": "nockio:proxy",
+      "hostname": "proxy",
       "container_name": "proxy",
       "volumes": [
         "/var/lib/nockio/git/sources:/var/lib/nockio/git/sources",
@@ -24,18 +26,12 @@
       "ports": [
         "80:80",
         "443:443"
-      ],
-      "networks": {
-        "applications": {
-          "aliases": [
-            "proxy"
-          ]
-        }
-      }
+      ]
     },
     "dashboard": {
+      "image": "nockio/dashboard",
       "build": "dashboard",
-      "image": "nockio:dashboard",
+      "hostname": "dashboard",
       "container_name": "dashboard",
       "volumes": [
         "/var/lib/nockio/git:/var/lib/nockio/git",
@@ -43,19 +39,7 @@
       ],
       "ports": [
         "8080:80"
-      ],
-      "networks": {
-        "applications": {
-          "aliases": [
-            "dashboard"
-          ]
-        }
-      }
-    }
-  },
-  "networks": {
-    "applications": {
-      "driver": "bridge"
+      ]
     }
   }
 }

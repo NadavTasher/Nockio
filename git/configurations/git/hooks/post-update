@@ -10,4 +10,4 @@ docker-compose --file ../.compose.nockio up --build --detach --no-color 1> /dev/
 
 # Restart the proxy
 echo "Nockio: Restarting Proxy"
-curl --silent --unix-socket /var/run/docker.sock http://localhost/containers/proxy/restart 1> /dev/null
+curl --silent --unix-socket /var/run/docker.sock --request POST http://localhost/containers/proxy/restart 1> /dev/null
