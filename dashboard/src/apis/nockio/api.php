@@ -30,10 +30,6 @@ class Nockio
     private const DIRECTORY_GIT = self::DIRECTORY_ROOT . DIRECTORY_SEPARATOR . "git";
     private const DIRECTORY_GIT_SOURCES = self::DIRECTORY_GIT . DIRECTORY_SEPARATOR . "sources";
 
-    private const DIRECTORY_PROXY = self::DIRECTORY_ROOT . DIRECTORY_SEPARATOR . "proxy";
-    private const DIRECTORY_PROXY_CONFIGURATIONS = self::DIRECTORY_PROXY . DIRECTORY_SEPARATOR . "configurations";
-
-
     public static function initialize()
     {
         // Requires authentication
@@ -42,6 +38,7 @@ class Nockio
 
     public static function handle()
     {
+        // Handle the request
         Base::handle(function ($action, $parameters) {
             if ($action === "setUp") {
                 if (isset($parameters->password)) {
@@ -119,8 +116,6 @@ class Nockio
             mkdir($repositoryDirectory, 0777, true);
             // Create the repository
             shell_exec("cd $repositoryDirectory && git init");
-            // Link the proxy configuration
-//            symlink(Utility::evaluatePath("$applicationName:.proxy.nockio", self::DIRECTORY_GIT_SOURCES), Utility::evaluatePath("$applicationName.conf", self::DIRECTORY_PROXY_CONFIGURATIONS));
             // Change the permissions
             shell_exec("chmod 777 -R $repositoryDirectory");
             // Return the contents

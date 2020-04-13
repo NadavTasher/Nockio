@@ -19,19 +19,25 @@ body {
 /* Heights */
 
 #top-pane {
-    height: 8vh;
+    height: 10vh;
 }
 
 #content-pane {
-    height: 84vh;
-}
-
-#bottom-pane {
-    height: 8vh;
+    height: 90vh;
 }
 
 /* Icon */
 #top-pane-icon {
     width: auto;
     height: inherit;
+}
+
+/* Scroll */
+
+/* Classes */
+.application {
+    /* Height */
+    min-height: 20vh;
+    /* Background */
+    background-color: var(--bright);
 }

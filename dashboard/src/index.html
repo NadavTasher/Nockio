@@ -57,18 +57,28 @@
         <div id="applications-pane" column>
 
         </div>
-        <div id="deployments-pane" column>
+        <div id="application-pane" column>
 
         </div>
         <div id="creation-pane" column>
 
         </div>
     </div>
-    <div id="bottom-pane" row>
-        <button>Applications</button>
-        <button>Deployments</button>
-        <button>Settings</button>
+    <div templates>
+        <div template="application">
+            <div column>
+
+            </div>
+        </div>
     </div>
 </div>
+<templates>
+    <application>
+        <div column>
+            <p style="font-size: 4vh">${name}</p>
+            <p style="font-size: 3vh">${description}</p>
+        </div>
+    </application>
+</templates>
 </body>
 </html>
