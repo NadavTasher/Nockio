@@ -1,0 +1,18 @@
+<VirtualHost *:80>
+    # Set the server name
+    ServerName dashboard.localhost
+    # Redirect to HTTPS
+    Redirect / https://dashboard.localhost/
+</VirtualHost>
+<VirtualHost *:443>
+    # Set the server name
+    ServerName dashboard.localhost
+    # Enable SSL/TLS
+    SSLEngine On
+    # Set the certificate files
+    SSLCertificateFile /var/lib/nockio/certificates/dashboard.localhost/certificate.crt
+    SSLCertificateKeyFile /var/lib/nockio/certificates/dashboard.localhost/private.key
+    # Proxy
+    ProxyPass / http://dashboard/
+    ProxyPassReverse / http://dashboard/
+</VirtualHost>
