@@ -1,0 +1,9 @@
+Package: nockio
+Version: 1.0-1
+Section: base
+Priority: optional
+Architecture: amd64
+Depends: docker-ce
+Maintainer: Nadav Tasher <tashernadav@gmail.com>
+Description: Nockio
+ A simple Docker-based Platform-as-a-Service

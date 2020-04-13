@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# This hook script is used to deploy an application on Nockio
+# This hook script is used to deploy an application on Nockio.
 #
-# This hook is auto-generated using the Nockio Dashboard application
+# This hook is loaded by default.
 
 # Build the application
 echo "Nockio: Building Application"
