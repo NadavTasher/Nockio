@@ -35,9 +35,14 @@ body {
 /* Scroll */
 
 /* Classes */
-.application {
+
+[application] {
     /* Height */
     min-height: 20vh;
     /* Background */
     background-color: var(--bright);
+}
+
+[application] > p {
+    justify-content: start;
 }
