@@ -5,21 +5,20 @@
       "image": "nockio/git",
       "hostname": "git",
       "container_name": "git",
+      "network_mode": "host",
       "volumes": [
         "/var/run/docker.sock:/var/run/docker.sock",
         "/var/lib/nockio/git:/var/lib/nockio/git"
       ],
       "ports": [
         "22:22"
-      ],
-      "networks": {
-        "host": {}
-      }
+      ]
     },
     "proxy": {
       "image": "nockio/proxy",
       "hostname": "proxy",
       "container_name": "proxy",
+      "network_mode": "host",
       "volumes": [
         "/var/lib/nockio/git/sources:/var/lib/nockio/git/sources",
         "/var/lib/nockio/certificates:/var/lib/nockio/certificates"
@@ -27,22 +26,17 @@
       "ports": [
         "80:80",
         "443:443"
-      ],
-      "networks": {
-        "host": {}
-      }
+      ]
     },
     "dashboard": {
       "image": "nockio/dashboard",
       "hostname": "dashboard",
       "container_name": "dashboard",
+      "network_mode": "host",
       "volumes": [
         "/var/lib/nockio/git:/var/lib/nockio/git",
         "/var/lib/nockio/dashboard:/var/www/html/files/database"
-      ],
-      "networks": {
-        "host": {}
-      }
+      ]
     }
   }
 }
