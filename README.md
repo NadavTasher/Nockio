@@ -1,6 +1,23 @@
 # Nockio
 is a simple Docker-based PaaS.
 
+## Installation
+Make sure to install [Docker](https://docker.com) on your system beforehand.
+
+Download the `.deb` file from the `Releases` tab.
+
+Run the following command:
+```bash
+sudo apt install ./nockio_*.deb
+```
+
+After the installation is complete, run:
+```bash
+nockio up
+```
+
+## Project file reference
+
 ### File: `.compose.nockio`
 This is a regular docker-compose configuration.
 It is a must in order to deploy an app on Nockio.
@@ -47,3 +64,14 @@ Example configuration:
 ### File: `.log.compose.nockio`
 This file is a log file of the application's deployment.
 It is generated once you push a commit on `master`.
+
+## Usage
+To access the dashboard, navigate to `dashboard.localhost` in your web browser.
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
