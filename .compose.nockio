@@ -12,7 +12,10 @@
       ],
       "ports": [
         "22:22"
-      ]
+      ],
+      "networks": {
+        "nockio": {}
+      }
     },
     "proxy": {
       "image": "nockio/proxy",
@@ -26,7 +29,10 @@
       "ports": [
         "80:80",
         "443:443"
-      ]
+      ],
+      "networks": {
+        "nockio": {}
+      }
     },
     "dashboard": {
       "image": "nockio/dashboard",
@@ -39,7 +45,10 @@
       ],
       "ports": [
         "8080:80"
-      ]
+      ],
+      "networks": {
+        "nockio": {}
+      }
     }
   }
 }

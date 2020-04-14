@@ -4,10 +4,13 @@
 #
 # This hook should be ran on startup.
 
-exec docker run --rm \
+if [[ "$1" == "up" || "$1" == "down" ]]; then
+
+docker run --rm \
   --volume /var/run/docker.sock:/var/run/docker.sock \
   --volume /var/lib/nockio/.compose.nockio:/var/lib/nockio/.compose.nockio \
-  --interactive \
-  --tty \
+  --interactive --tty \
   docker/compose:1.25.4 \
-  docker-compose --file /var/lib/nockio/.compose.nockio up --detach --no-color
+  docker-compose --file /var/lib/nockio/.compose.nockio $1 --detach --no-color
+
+fi

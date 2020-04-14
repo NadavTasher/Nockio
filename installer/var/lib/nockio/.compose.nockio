@@ -11,7 +11,10 @@
       ],
       "ports": [
         "22:22"
-      ]
+      ],
+      "networks": {
+        "nockio": {}
+      }
     },
     "proxy": {
       "image": "nockio/proxy",
@@ -24,7 +27,10 @@
       "ports": [
         "80:80",
         "443:443"
-      ]
+      ],
+      "networks": {
+        "nockio": {}
+      }
     },
     "dashboard": {
       "image": "nockio/dashboard",
@@ -33,7 +39,10 @@
       "volumes": [
         "/var/lib/nockio/git:/var/lib/nockio/git",
         "/var/lib/nockio/dashboard:/var/www/html/files/database"
-      ]
+      ],
+      "networks": {
+        "nockio": {}
+      }
     }
   }
 }
