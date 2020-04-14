@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# This script is used to build the installer packages for Nockio.
+#
+# The output file is in the "out" directory.
+
+dpkg-deb --build installer out/nockio.deb

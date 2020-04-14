@@ -13,7 +13,7 @@
         "22:22"
       ],
       "networks": {
-        "nockio": {}
+        "host": {}
       }
     },
     "proxy": {
@@ -29,7 +29,7 @@
         "443:443"
       ],
       "networks": {
-        "nockio": {}
+        "host": {}
       }
     },
     "dashboard": {
@@ -41,7 +41,7 @@
         "/var/lib/nockio/dashboard:/var/www/html/files/database"
       ],
       "networks": {
-        "nockio": {}
+        "host": {}
       }
     }
   }

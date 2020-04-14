@@ -1,11 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Build and Run - All" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
-    <deployment type="docker-compose.yml">
-      <settings>
-        <option name="commandLineOptions" value="--build" />
-        <option name="sourceFilePath" value=".compose.nockio" />
-      </settings>
-    </deployment>
+  <configuration default="false" name="Build and Run - All" type="CompoundRunConfigurationType">
+    <toRun name="Build - Dashboard" type="docker-deploy" />
+    <toRun name="Run - All" type="docker-deploy" />
+    <toRun name="Build - Git" type="docker-deploy" />
+    <toRun name="Build - Proxy" type="docker-deploy" />
     <method v="2" />
   </configuration>
 </component>
