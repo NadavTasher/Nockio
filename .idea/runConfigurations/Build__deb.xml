@@ -1,10 +1,13 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Build .deb" type="ShConfigurationType">
-    <option name="SCRIPT_PATH" value="$PROJECT_DIR$/.build.nockio" />
-    <option name="SCRIPT_OPTIONS" value="" />
-    <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-    <option name="INTERPRETER_PATH" value="/bin/bash" />
+  <configuration default="false" name="Build .deb" type="BashConfigurationType" factoryName="Bash">
     <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="INTERPRETER_PATH" value="/bin/bash" />
+    <option name="PROJECT_INTERPRETER" value="false" />
+    <option name="WORKING_DIRECTORY" value="" />
+    <option name="PARENT_ENVS" value="true" />
+    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/.build.nockio" />
+    <option name="PARAMETERS" value="" />
+    <module name="" />
     <method v="2" />
   </configuration>
 </component>
