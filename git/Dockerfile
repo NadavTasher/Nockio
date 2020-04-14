@@ -11,7 +11,7 @@ RUN apt-get -y install curl --no-install-recommends --no-install-suggests
 RUN apt-get -y install openssh-server --no-install-recommends --no-install-suggests
 
 # Install docker-compose
-RUN curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-Linux-x86_64" -o /usr/local/bin/docker-compose
+RUN curl -skL "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-Linux-x86_64" -o /usr/local/bin/docker-compose
 RUN chmod +x /usr/local/bin/docker-compose
 
 # Set up Git
