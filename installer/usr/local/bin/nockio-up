@@ -6,7 +6,7 @@
 
 exec docker run --rm \
   --volume /var/run/docker.sock:/var/run/docker.sock \
-  --volume /var/lib/nockio/.compose.nockio /var/lib/nockio/.compose.nockio \
+  --volume /var/lib/nockio/.compose.nockio:/var/lib/nockio/.compose.nockio \
   --interactive \
   --tty \
   docker/compose:1.25.4 \
