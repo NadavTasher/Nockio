@@ -1,9 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Build and Run - All" type="CompoundRunConfigurationType">
-    <toRun name="Build - Dashboard" type="docker-deploy" />
     <toRun name="Run - All" type="docker-deploy" />
-    <toRun name="Build - Git" type="docker-deploy" />
-    <toRun name="Build - Proxy" type="docker-deploy" />
+    <toRun name="Build - All" type="CompoundRunConfigurationType" />
     <method v="2" />
   </configuration>
 </component>

@@ -21,6 +21,7 @@
       "network_mode": "host",
       "volumes": [
         "/var/lib/nockio/git/sources:/var/lib/nockio/git/sources",
+        "/var/lib/nockio/dashboard:/var/lib/nockio/dashboard",
         "/var/lib/nockio/certificates:/var/lib/nockio/certificates"
       ],
       "ports": [
