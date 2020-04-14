@@ -10,12 +10,9 @@ RUN apt-get -y install git --no-install-recommends --no-install-suggests
 RUN apt-get -y install curl --no-install-recommends --no-install-suggests
 RUN apt-get -y install openssh-server --no-install-recommends --no-install-suggests
 
-# Install python3
-RUN apt-get -y install python3 --no-install-recommends --no-install-suggests
-RUN apt-get -y install python3-pip --no-install-recommends --no-install-suggests
 # Install docker-compose
-RUN pip3 install setuptools
-RUN pip3 install docker-compose
+RUN curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-Linux-x86_64" -o /usr/local/bin/docker-compose
+RUN chmod +x /usr/local/bin/docker-compose
 
 # Set up Git
 RUN mkdir -p /etc/git
