@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# This script runs on installation.
+#
+# It creates a docker network.
+
+docker network create proxy --driver bridge

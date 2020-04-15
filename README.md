@@ -4,6 +4,18 @@ is a simple Docker-based PaaS.
 ## Installation
 Make sure to install [Docker](https://docker.com) on your system beforehand.
 
+Make sure your local user is in the `docker` group:
+
+```bash
+sudo usermod -aG docker $USER
+```
+
+Make sure docker is enabled on boot:
+
+```bash
+sudo systemctl enable docker
+```
+
 Download the `.deb` file from the `Releases` tab.
 
 Run the following command:
@@ -11,10 +23,14 @@ Run the following command:
 sudo apt install ./nockio_*.deb
 ```
 
-After the installation is complete, run:
+Modify the `/var/lib/nockio/.compose.nockio` file as needed
+
+Finally, run:
 ```bash
 nockio up
 ```
+
+This process can take some time.
 
 ## Project file reference
 

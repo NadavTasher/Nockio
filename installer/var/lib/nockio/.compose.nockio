@@ -7,7 +7,8 @@
       "container_name": "git",
       "volumes": [
         "/var/run/docker.sock:/var/run/docker.sock",
-        "/var/lib/nockio/git:/var/lib/nockio/git"
+        "/var/lib/nockio/git:/var/lib/nockio/git",
+        "/var/lib/nockio/git/sources:/nockio"
       ],
       "ports": [
         "22:22"
@@ -19,8 +20,8 @@
       "container_name": "proxy",
       "volumes": [
         "/var/lib/nockio/git/sources:/var/lib/nockio/git/sources",
-        "/var/lib/nockio/dashboard:/var/lib/nockio/dashboard",
-        "/var/lib/nockio/certificates:/var/lib/nockio/certificates"
+        "/var/lib/nockio/certificates:/var/lib/nockio/certificates",
+        "/var/lib/nockio/dashboard:/var/lib/nockio/dashboard"
       ],
       "ports": [
         "80:80",
@@ -52,8 +53,9 @@
   },
   "networks": {
     "proxy": {
-      "external": "true",
-      "driver": "bridge"
+      "external": {
+        "name": "proxy"
+      }
     }
   }
 }
