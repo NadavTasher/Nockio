@@ -2,6 +2,8 @@
 
 # This script runs on installation.
 #
-# It creates a docker network.
+# It creates a docker network, and allows containers to access the socket.
 
 docker network create proxy --driver bridge
+
+chmod 777 /var/run/docker.sock
