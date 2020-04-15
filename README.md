@@ -25,6 +25,8 @@ sudo apt install ./nockio_*.deb
 
 Modify the `/var/lib/nockio/.compose.nockio` file as needed
 
+Make sure no other program is using the configured ports.
+
 Finally, run:
 ```bash
 nockio up
